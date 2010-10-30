@@ -1,13 +1,10 @@
 #!/bin/sh
-cd `dirname $0`
-DOTFILES=`pwd`
+cd $(dirname $0)
+for dotfile in .?*
+do
+    if [ $dotfile != '..' ] && [ $dotfile != '.git' ]
+    then
+        ln -Fis "$PWD/$dotfile" $HOME
+    fi
+done
 
-ln -s $DOTFILES/vim/.vim $HOME/.vim
-ln -s $DOTFILES/vim/.vimrc $HOME/.vimrc
-ln -s $DOTFILES/zsh/.zshrc $HOME/.zshrc
-ln -s $DOTFILES/zsh/.dircolors $HOME/.dircolors
-ln -s $DOTFILES/zsh/.zshrc.d/ $HOME/.zshrc.d
-ln -s $DOTFILES/screen/.screenrc $HOME/.screenrc
-touch $HOME/.outputz
-
-cd -
