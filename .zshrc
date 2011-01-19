@@ -1,9 +1,11 @@
 ####
 # .zshrc file
 #
-# Maintainer  : Sotaro KARASAWA <sotaro.k@gmail.com>
-# Last Change : 2008/11/16
-# Version     : 0.2.1
+# Maintainer  : Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
+# Based On    : Sotaro KARASAWA <sotaro.k@gmail.com>
+# Last Change : 2011/01/20
+# Version     : 0.0.1
+# https://github.com/marucc/dotfiles
 ####
 
 export LANG=ja_JP.UTF-8
@@ -99,6 +101,7 @@ hco() {
     hst
     FROM=`hg branch`
     TO=$1
+    hg pull
     RET=`hg update -c -r $TO`
     if [ -n "$RET" ]; then
         hg update -r $TO

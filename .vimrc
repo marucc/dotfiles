@@ -1,10 +1,11 @@
 " .vimrc file
 "
-" Maintainer:   Sotaro KARASAWA <sotaro.k@gmail.com>
+" Maintainer:   Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
+" Based On:     Sotaro KARASAWA <sotaro.k@gmail.com>
 " Based On:     Daichi Kamemoto <daich@asial.co.jp>
-" Last Change:  2008/09/24
-" Version:      0.0.7.0
-"
+" Last Change:  2011/01/20
+" Version:      0.0.1
+" https://github.com/marucc/dotfiles
 """""
 
 
