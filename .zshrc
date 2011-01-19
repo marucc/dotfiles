@@ -22,12 +22,14 @@ export SCREENDIR=$HOME/.screen
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
 # python
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.6
-export WORKON_HOME=${HOME}/venvs
-export PIP_DOWNLOAD_CACHE=${HOME}/.pip_cache
-export PIP_RESPECT_VIRTUALENV=true
-export PIP_REQUIRE_VIRTUALENV=true
-source /usr/local/bin/virtualenvwrapper.sh
+if [ ! -z /usr/local/bin/virtualenvwrapper.sh ]; then
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.6
+    export WORKON_HOME=${HOME}/venvs
+    export PIP_DOWNLOAD_CACHE=${HOME}/.pip_cache
+    export PIP_RESPECT_VIRTUALENV=true
+    export PIP_REQUIRE_VIRTUALENV=true
+    source /usr/local/bin/virtualenvwrapper.sh
+fi
 
 # 関数
 find-grep () { find . -type f -print | xargs grep -n --binary-files=without-match $@ }
