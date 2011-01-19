@@ -16,6 +16,7 @@ endif
 """""
 " Initialize Settings
 """""
+"set t_Co=256
 set nocompatible
 set history=999
 set encoding=utf-8
@@ -48,10 +49,10 @@ set hidden
 " 編集中のファイルが外部のエディタから変更された場合には、自動で読み直し
 set autoread
 " tagsディレクトリを探し出してctagsを有効にする
-if has("autochdir")
-    set autochdir
-    set tags=tags;
-endif
+"if has("autochdir")
+"    set autochdir
+"    set tags=tags;
+"endif
 " 前回終了したカーソル行に移動
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
@@ -65,7 +66,7 @@ set showmatch
 set hlsearch
 set wrap
 set shiftwidth=4
-set visualbell
+"set visualbell
 set expandtab
 set ts=4
 
@@ -138,9 +139,9 @@ endif
 " 改行コードの自動認識
 set fileformats=unix,dos,mac
 " □とか○の文字があってもカーソル位置がずれないようにする
-if exists('&ambiwidth')
+"if exists('&ambiwidth')
   set ambiwidth=double
-endif
+"endif
 
 """""
 " Highlight Settings
@@ -166,23 +167,23 @@ if has("autocmd")
     autocmd FileType pl :set dictionary+=~/.vim/dict/perl.dict
     autocmd FileType pm :set dictionary+=~/.vim/dict/perl.dict
     
-    autocmd FileType html setlocal ts=2 sw=2
-    autocmd FileType smarty setlocal ts=2 sw=2
+    autocmd FileType html setlocal ts=4 sw=4
+    autocmd FileType smarty setlocal ts=4 sw=4
     autocmd FileType make setlocal nomodeline noexpandtab
     autocmd FileType yaml setlocal ts=2 sw=2
-    autocmd FileType css setlocal ts=2 sw=2
-    autocmd FileType javascript setlocal ts=2 sw=2
+    autocmd FileType css setlocal ts=4 sw=4
+    autocmd FileType javascript setlocal ts=4 sw=4
     autocmd FileType python setlocal ts=2 sw=2
 
-    autocmd BufNewFile *.php 0r ~/.vim/skeleton/php.skel
-    autocmd BufNewFile *.py 0r ~/.vim/skeleton/python.skel
-    autocmd BufNewFile *.rb 0r ~/.vim/skeleton/ruby.skel
-    autocmd BufNewFile *.pl 0r ~/.vim/skeleton/perl.skel
-    autocmd BufNewFile *.html 0r ~/.vim/skeleton/html.skel
-    autocmd BufNewFile *.tpl 0r ~/.vim/skeleton/html.skel
+    "autocmd BufNewFile *.php 0r ~/.vim/skeleton/php.skel
+    "autocmd BufNewFile *.py 0r ~/.vim/skeleton/python.skel
+    "autocmd BufNewFile *.rb 0r ~/.vim/skeleton/ruby.skel
+    "autocmd BufNewFile *.pl 0r ~/.vim/skeleton/perl.skel
+    "autocmd BufNewFile *.html 0r ~/.vim/skeleton/html.skel
+    "autocmd BufNewFile *.tpl 0r ~/.vim/skeleton/html.skel
 
     " バッファの。。。なんかよくわからんけど追加。あとで。
-    autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
+    " autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
     autocmd Filetype *
                 \   if &omnifunc == "" |
                 \           setlocal omnifunc=syntaxcomplete#Complete |
@@ -305,36 +306,75 @@ if has("syntax")
         autocmd! invisible
         autocmd BufNew,BufRead * call ActivateInvisibleIndicator()
     augroup END
+
+    " 入力補完
+    highlight Pmenu ctermfg=Black ctermbg=Grey
+    highlight PmenuSel ctermfg=Black ctermbg=Yellow
+    highlight PmenuSbar ctermbg=Cyan
+
+    " diff
+    highlight DiffAdd    term=bold ctermfg=White ctermbg=Red
+    highlight DiffChange term=bold ctermfg=White ctermbg=Cyan
+    highlight DiffDelete term=bold cterm=bold ctermfg=Red ctermbg=Blue
+    highlight DiffText   term=reverse cterm=bold ctermfg=Yellow ctermbg=Green
 endif
 
 
-""Tab文字も区別されずにハイライトされるので、区別したいときはTab文字の表示を別に
-""設定する必要がある。
-"function! SOLSpaceHilight()
-"    "syntax match SOLSpace "^\s\+" display containedin=ALL
-"    "highlight SOLSpace term=underline ctermbg=Gray
-"endf
-""全角スペースをハイライトさせる。
-"function! JISX0208SpaceHilight()
-"    syntax match JISX0208Space "　" display containedin=ALL
-"    highlight JISX0208Space term=underline ctermbg=LightCyan
-"endf
-""syntaxの有無をチェックし、新規バッファと新規読み込み時にハイライトさせる
-"if has("syntax")
-"    syntax on
-"        augroup invisible
-"        autocmd! invisible
-"        autocmd BufNew,BufRead * call SOLSpaceHilight()
-"        autocmd BufNew,BufRead * call JISX0208SpaceHilight()
-"    augroup END
-"endif
-"
-"
-""特殊文字(SpecialKey)の見える化。listcharsはlcsでも設定可能。
-""trailは行末スペース。
-"set list
-"set listchars=tab:^_,trail:-,nbsp:%,extends:>,precedes:<
+"Tab文字も区別されずにハイライトされるので、区別したいときはTab文字の表示を別に
+"設定する必要がある。
+function! SOLSpaceHilight()
+    "syntax match SOLSpace "^\s\+" display containedin=ALL
+    "highlight SOLSpace term=underline ctermbg=Gray
+endf
+"全角スペースをハイライトさせる。
+function! JISX0208SpaceHilight()
+    syntax match JISX0208Space "　" display containedin=ALL
+    highlight JISX0208Space term=underline ctermbg=LightCyan
+endf
+"syntaxの有無をチェックし、新規バッファと新規読み込み時にハイライトさせる
+if has("syntax")
+    syntax on
+        augroup invisible
+        autocmd! invisible
+        autocmd BufNew,BufRead * call SOLSpaceHilight()
+        autocmd BufNew,BufRead * call JISX0208SpaceHilight()
+    augroup END
+endif
 
+
+"特殊文字(SpecialKey)の見える化。listcharsはlcsでも設定可能。
+"trailは行末スペース。
+set list
+set listchars=tab:^_,trail:-,nbsp:%,extends:>,precedes:<
+
+
+""NERDTree
+nmap <silent> <F7> :NERDTreeToggle<CR>
+""TagList
+"let Tlist_Ctags_Cmd = "/usr/local/bin/ctags"
+"let Tlist_Inc_Winwidth = 1
+"let Tlist_Exit_OnlyWindow = 1
+"let Tlist_File_Fold_Auto_Close = 1
+"let Tlist_Process_File_Always = 1
+"let Tlist_Enable_Fold_Column = 0
+"let tlist_php_settings = 'php;c:class;d:constant;f:function'
+"nmap <silent> <F8> :TlistToggle<CR>
+
+"PHPSettings
+"autocmd FileType php " :set omnifunc=phpcomplete#CompletePHP
+"let php_sql_query=1
+"let php_htmllnStrings=1
+"let php_noShortTags=1
+"let php_folding=1
+
+"VIM Diff
+"hi DiffAdd    ctermfg=cyan ctermbg=black
+"hi DiffChange ctermfg=white ctermbg=darkcyan
+"hi DiffDelete ctermfg=red ctermbg=darkgray
+"hi DiffText   ctermfg=white ctermbg=darkgray
+
+"PasteMode Switch
+set pastetoggle=<F11>
 
 " outputzの設定を読み込む
 " source ~/.outputz
@@ -344,3 +384,5 @@ if &term == "xterm-color"
     set t_kb=
     fixdel
 endif
+
+

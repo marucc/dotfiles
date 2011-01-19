@@ -9,7 +9,7 @@
 export LANG=ja_JP.UTF-8
 
 # パスの設定
-PATH=/opt/local/bin:/usr/local/bin:$PATH:/sbin:/usr/sbin
+PATH=/usr/local/bin:/usr/local/sbin:$PATH:/sbin:/usr/sbin
 export MANPATH=/usr/local/man:/usr/share/man
 
 # エディタを vim に設定
@@ -18,6 +18,14 @@ export EDITOR="vim"
 export CLICOLOR=1
 export SCREENDIR=$HOME/.screen
 export LSCOLORS=ExFxCxDxBxegedabagacad
+
+# python
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.6
+export WORKON_HOME=${HOME}/venvs
+export PIP_DOWNLOAD_CACHE=${HOME}/.pip_cache
+export PIP_RESPECT_VIRTUALENV=true
+export PIP_REQUIRE_VIRTUALENV=true
+source /usr/local/bin/virtualenvwrapper.sh
 
 # 関数
 find-grep () { find . -type f -print | xargs grep -n --binary-files=without-match $@ }
@@ -46,21 +54,58 @@ alias la='ls -la'
 alias dh='df -h'
 alias vi='vim'
 alias v='vim'
-alias st='svn st'
+alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
+
+alias st='svn info; svn st'
 alias stu='svn st -u'
-alias sd='svn di'
 alias sdi='svn di'
 alias sad='svn add'
+alias smv='svn rm'
+alias srm='svn rm'
 alias sp='svn up'
 alias sup='svn up'
 alias sci='svn ci'
-alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
+
 alias gst='git status'
-alias gci='git commit'
+alias gtg='git tag'
+alias gtl='list=`git tag`;echo -ne $list|grep "^release_"|sed "s/release_\(.*\)/\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/release_\1/";echo -ne $list|grep -v "^release_"'
+alias gbl='git branch'
+alias gbls='git branch -a'
 alias gdi='git diff'
 alias gad='git add'
-alias gps='git push'
-alias gpl='git pull'
+alias gmv='git mv'
+alias grm='git rm'
+alias gci='git commit'
+alias gps='git push --tags'
+alias gpl='git pull --tag'
+alias gmg='git pull origin'
+alias gco='git checkout'
+
+alias hst='echo -n "# On branch ";hg branch; hg status'
+alias hbl='hg branch'
+alias hbls='hg branches'
+hdi() {
+    hg diff $1 | less
+}
+alias had='hg add'
+alias hrm='hg rm'
+alias hci='hg commit'
+alias hps='hg push'
+alias hpl='hg pull;hg update'
+alias hup='hg update'
+alias hbl='hg branches'
+alias hmg='hg merge -r'
+hco() {
+    hst
+    FROM=`hg branch`
+    TO=$1
+    RET=`hg update -c -r $TO`
+    if [ -n "$RET" ]; then
+        hg update -r $TO
+        hg diff -r $FROM --stat
+    fi
+}
+
 
 # プロンプトの設定 
 autoload colors
@@ -82,7 +127,16 @@ case ${UID} in
         PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
 ;;
 esac
-RPROMPT=" [%~]"
+
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' formats '(%s)-%b '
+zstyle ':vcs_info:*' actionformats '(%s)-%b|%a '
+precmd () {
+        psvar=()
+            LANG=en_US.UTF-8 vcs_info
+                [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+}
+RPROMPT="%1(v|%F{green}%1v%f|)[%~]"
 
 setopt prompt_subst
 
