@@ -22,7 +22,7 @@ export SCREENDIR=$HOME/.screen
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
 # python
-if [ ! -z /usr/local/bin/virtualenvwrapper.sh ]; then
+if [ -e /usr/local/bin/virtualenvwrapper.sh ]; then
     export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.6
     export WORKON_HOME=${HOME}/venvs
     export PIP_DOWNLOAD_CACHE=${HOME}/.pip_cache
