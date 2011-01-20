@@ -4,7 +4,6 @@
 # Maintainer  : Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 # Based On    : Sotaro KARASAWA <sotaro.k@gmail.com>
 # Last Change : 2011/01/20
-# Version     : 0.0.2
 # https://github.com/marucc/dotfiles
 ####
 
@@ -66,7 +65,7 @@ alias stg='repos=`svn info|grep "URL: .*trunk"|sed "s/URL: \(.*\)trunk/\1/"`;lis
 alias stl='stg'
 alias sdi='svn di'
 alias sad='svn add'
-alias smv='svn rm'
+alias smv='svn mv'
 alias srm='svn rm'
 alias sp='svn up'
 alias sup='svn up'
