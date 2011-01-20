@@ -4,7 +4,7 @@
 # Maintainer  : Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 # Based On    : Sotaro KARASAWA <sotaro.k@gmail.com>
 # Last Change : 2011/01/20
-# Version     : 0.0.1
+# Version     : 0.0.2
 # https://github.com/marucc/dotfiles
 ####
 
