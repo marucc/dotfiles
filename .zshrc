@@ -62,7 +62,8 @@ alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
 
 alias st='svn info; svn st'
 alias stu='svn st -u'
-alias stl='repos=`svn info|grep "URL: .*trunk"|sed "s/URL: \(.*\)trunk/\1/"`;list=`svn ls ${repos}tags`;echo -ne $list|grep "^release_"|sed "s/release_\(.*\)\//\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/release_\1/";echo -ne $list|grep -v "^release_"|sort'
+alias stg='repos=`svn info|grep "URL: .*trunk"|sed "s/URL: \(.*\)trunk/\1/"`;list=`svn ls ${repos}tags`;echo -ne $list|grep "^release_"|sed "s/release_\(.*\)\//\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/release_\1/";echo -ne $list|grep -v "^release_"|sort'
+alias stl='stg'
 alias sdi='svn di'
 alias sad='svn add'
 alias smv='svn rm'
@@ -87,11 +88,11 @@ alias gpl='git pull;git pull --tag'
 alias gmg='git pull origin'
 alias gco='git checkout'
 
-alias hst='echo -n "# On branch ";hg branch; hg status'
-alias hbl='hg branch'
-alias hbls='hg branches'
+alias hst='echo -n "# On branch ";hg branch; hg --config "extensions.color=" status'
+alias hbl='hg --config "extensions.color=" branch'
+alias hbls='hg --config "extensions.color=" branches'
 hdi() {
-    hg diff $1 | less
+    hg --config "extensions.color=" diff --color=always $1 | less -R
 }
 alias had='hg add'
 alias hrm='hg rm'
@@ -99,7 +100,6 @@ alias hci='hg commit'
 alias hps='hg push'
 alias hpl='hg pull;hg update'
 alias hup='hg update'
-alias hbl='hg branches'
 alias hmg='hg merge -r'
 hco() {
     hst
@@ -108,8 +108,8 @@ hco() {
     hg pull
     RET=`hg update -c -r $TO`
     if [ -n "$RET" ]; then
-        hg update -r $TO
-        hg diff -r $FROM --stat
+        hg --config "extensions.color=" update -r $TO
+        hg --config "extensions.color=" diff -r $FROM --stat
     fi
 }
 
