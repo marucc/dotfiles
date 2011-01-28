@@ -174,7 +174,7 @@ if has("autocmd")
     autocmd FileType yaml setlocal ts=2 sw=2
     autocmd FileType css setlocal ts=4 sw=4
     autocmd FileType javascript setlocal ts=4 sw=4
-    autocmd FileType python setlocal ts=2 sw=2
+    autocmd FileType python setlocal ts=4 sw=4
 
     "autocmd BufNewFile *.php 0r ~/.vim/skeleton/php.skel
     "autocmd BufNewFile *.py 0r ~/.vim/skeleton/python.skel
