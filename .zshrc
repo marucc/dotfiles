@@ -3,15 +3,21 @@
 #
 # Maintainer  : Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 # Based On    : Sotaro KARASAWA <sotaro.k@gmail.com>
-# Last Change : 2011/01/20
+# Last Change : 2011/02/03
 # https://github.com/marucc/dotfiles
 ####
 
 export LANG=ja_JP.UTF-8
 
 # パスの設定
-PATH=/usr/local/bin:/usr/local/sbin:$PATH:/sbin:/usr/sbin
+PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH:/sbin:/usr/sbin
 export MANPATH=/usr/local/man:/usr/share/man
+
+# mysql
+export MYSQL_PS1="\u@\h[\d]> "
+
+# elixir
+export SERVER_STATUS='devlocal'
 
 # エディタを vim に設定
 export SVN_EDITOR="vim"
