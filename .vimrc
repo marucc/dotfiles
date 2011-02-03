@@ -3,8 +3,8 @@
 " Maintainer:   Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 " Based On:     Sotaro KARASAWA <sotaro.k@gmail.com>
 " Based On:     Daichi Kamemoto <daich@asial.co.jp>
-" Last Change:  2011/01/20
-" Version:      0.0.1
+" Last Change:  2011/02/03
+" Version:      0.0.2
 " https://github.com/marucc/dotfiles
 """""
 
@@ -140,9 +140,9 @@ endif
 " 改行コードの自動認識
 set fileformats=unix,dos,mac
 " □とか○の文字があってもカーソル位置がずれないようにする
-"if exists('&ambiwidth')
+if exists('&ambiwidth')
   set ambiwidth=double
-"endif
+endif
 
 """""
 " Highlight Settings
@@ -167,7 +167,7 @@ if has("autocmd")
     autocmd FileType rb :set dictionary+=~/.vim/dict/ruby.dict
     autocmd FileType pl :set dictionary+=~/.vim/dict/perl.dict
     autocmd FileType pm :set dictionary+=~/.vim/dict/perl.dict
-    
+
     autocmd FileType html setlocal ts=4 sw=4
     autocmd FileType smarty setlocal ts=4 sw=4
     autocmd FileType make setlocal nomodeline noexpandtab
@@ -241,7 +241,7 @@ let nohl_xul_atts = 1
 "let g:miniBufExplSplitBelow=0  " Put new window above
 "let g:miniBufExplMapWindowNavArrows=1
 "let g:miniBufExplMapCTabSwitchBufs=1
-"let g:miniBufExplModSelTarget=1 
+"let g:miniBufExplModSelTarget=1
 "let g:miniBufExplSplitToEdge=1
 
 
@@ -321,32 +321,32 @@ if has("syntax")
 endif
 
 
-"Tab文字も区別されずにハイライトされるので、区別したいときはTab文字の表示を別に
-"設定する必要がある。
-function! SOLSpaceHilight()
-    "syntax match SOLSpace "^\s\+" display containedin=ALL
-    "highlight SOLSpace term=underline ctermbg=Gray
-endf
-"全角スペースをハイライトさせる。
-function! JISX0208SpaceHilight()
-    syntax match JISX0208Space "　" display containedin=ALL
-    highlight JISX0208Space term=underline ctermbg=LightCyan
-endf
-"syntaxの有無をチェックし、新規バッファと新規読み込み時にハイライトさせる
-if has("syntax")
-    syntax on
-        augroup invisible
-        autocmd! invisible
-        autocmd BufNew,BufRead * call SOLSpaceHilight()
-        autocmd BufNew,BufRead * call JISX0208SpaceHilight()
-    augroup END
-endif
-
-
-"特殊文字(SpecialKey)の見える化。listcharsはlcsでも設定可能。
-"trailは行末スペース。
-set list
-set listchars=tab:^_,trail:-,nbsp:%,extends:>,precedes:<
+""Tab文字も区別されずにハイライトされるので、区別したいときはTab文字の表示を別に
+""設定する必要がある。
+"function! SOLSpaceHilight()
+"    "syntax match SOLSpace "^\s\+" display containedin=ALL
+"    "highlight SOLSpace term=underline ctermbg=Gray
+"endf
+""全角スペースをハイライトさせる。
+"function! JISX0208SpaceHilight()
+"    syntax match JISX0208Space "　" display containedin=ALL
+"    highlight JISX0208Space term=underline ctermbg=LightCyan
+"endf
+""syntaxの有無をチェックし、新規バッファと新規読み込み時にハイライトさせる
+"if has("syntax")
+"    syntax on
+"        augroup invisible
+"        autocmd! invisible
+"        autocmd BufNew,BufRead * call SOLSpaceHilight()
+"        autocmd BufNew,BufRead * call JISX0208SpaceHilight()
+"    augroup END
+"endif
+"
+"
+""特殊文字(SpecialKey)の見える化。listcharsはlcsでも設定可能。
+""trailは行末スペース。
+"set list
+"set listchars=tab:^_,trail:-,nbsp:%,extends:>,precedes:<
 
 
 ""NERDTree
@@ -359,7 +359,7 @@ nmap <silent> <F7> :NERDTreeToggle<CR>
 "let Tlist_Process_File_Always = 1
 "let Tlist_Enable_Fold_Column = 0
 "let tlist_php_settings = 'php;c:class;d:constant;f:function'
-"nmap <silent> <F8> :TlistToggle<CR>
+nmap <silent> <F8> :TlistToggle<CR>
 
 "PHPSettings
 "autocmd FileType php " :set omnifunc=phpcomplete#CompletePHP
