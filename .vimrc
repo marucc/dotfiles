@@ -3,8 +3,8 @@
 " Maintainer:   Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 " Based On:     Sotaro KARASAWA <sotaro.k@gmail.com>
 " Based On:     Daichi Kamemoto <daich@asial.co.jp>
-" Last Change:  2011/02/03
-" Version:      0.0.2
+" Last Change:  2011/06/02
+" Version:      0.0.3
 " https://github.com/marucc/dotfiles
 """""
 
@@ -171,7 +171,7 @@ if has("autocmd")
     autocmd FileType html setlocal ts=4 sw=4
     autocmd FileType smarty setlocal ts=4 sw=4
     autocmd FileType make setlocal nomodeline noexpandtab
-    autocmd FileType yaml setlocal ts=2 sw=2
+    autocmd FileType yaml setlocal ts=4 sw=4
     autocmd FileType css setlocal ts=4 sw=4
     autocmd FileType javascript setlocal ts=4 sw=4
     autocmd FileType python setlocal ts=4 sw=4
@@ -230,6 +230,7 @@ augroup filetypedetect
     au! BufRead,BufNewFile *.ctp setfiletype php
     au! BufRead,BufNewFile *.xul setfiletype xul
     au! BufRead,BufNewFile *.jsm setfiletype javascript
+    au! BufRead,BufNewFile *.twig setfiletype python
 augroup END
 
 let nohl_xul_atts = 1
