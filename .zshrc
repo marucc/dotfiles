@@ -3,7 +3,7 @@
 #
 # Maintainer  : Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 # Based On    : Sotaro KARASAWA <sotaro.k@gmail.com>
-# Last Change : 2011/02/03
+# Last Change : 2011/06/02
 # https://github.com/marucc/dotfiles
 ####
 
@@ -81,7 +81,7 @@ alias gst='git status'
 alias gtg='git tag'
 alias gtl='list=`git tag`;echo -ne $list|grep "^release_"|sed "s/release_\(.*\)/\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/release_\1/";echo -ne $list|grep -v "^release_"|sort'
 alias gbl='git branch'
-alias gbls='git branch -a'
+alias gbls='git remote prune origin;git branch -a'
 alias gdi='git diff'
 alias gad='git add'
 alias gmv='git mv'
