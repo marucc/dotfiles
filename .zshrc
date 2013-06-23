@@ -10,7 +10,7 @@
 export LANG=ja_JP.UTF-8
 
 # パスの設定
-PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH:/sbin:/usr/sbin
+PATH=$HOME/pear/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH:/sbin:/usr/sbin
 export MANPATH=/usr/local/man:/usr/share/man
 
 # mysql
@@ -28,7 +28,7 @@ export LSCOLORS=ExFxCxDxBxegedabagacad
 
 # python
 if [ -e /usr/local/bin/virtualenvwrapper.sh ]; then
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.6
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.7
     export WORKON_HOME=${HOME}/venvs
     export PIP_DOWNLOAD_CACHE=${HOME}/.pip_cache
     export PIP_RESPECT_VIRTUALENV=true
@@ -57,6 +57,9 @@ linux*)
     alias ls='ls --color=auto'
     ;;
 esac
+
+export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
+alias vim='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@"'
 
 alias ll='ls -l'
 alias la='ls -la'
