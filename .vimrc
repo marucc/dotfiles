@@ -83,6 +83,10 @@ nnoremap <Space>d :<C-u>bd<CR>
 
 imap <C-@> <C-[>
 
+" swap, backup
+"set directory=~/.vim/tmp
+set backupdir=~/.vim/tmp
+
 """""
 " Japanese Settins by ずんWik
 "
@@ -140,7 +144,7 @@ endif
 " 改行コードの自動認識
 set fileformats=unix,dos,mac
 " □とか○の文字があってもカーソル位置がずれないようにする
-if exists('&ambiwidth')
+if exists('ambiwidth')
   set ambiwidth=double
 endif
 
@@ -173,8 +177,10 @@ if has("autocmd")
     autocmd FileType make setlocal nomodeline noexpandtab
     autocmd FileType yaml setlocal ts=4 sw=4
     autocmd FileType css setlocal ts=4 sw=4
+    autocmd FileType less setlocal ts=4 sw=4
     autocmd FileType javascript setlocal ts=4 sw=4
     autocmd FileType python setlocal ts=4 sw=4
+    autocmd FileType coffee setlocal ts=4 sw=4
 
     "autocmd BufNewFile *.php 0r ~/.vim/skeleton/php.skel
     "autocmd BufNewFile *.py 0r ~/.vim/skeleton/python.skel
@@ -224,13 +230,15 @@ autocmd FileType ruby  :nmap <up>   <esc>:w<cr>:!/usr/bin/env ruby %<cr>
 autocmd FileType ruby  :nmap <down> <esc>:w<cr>:!/usr/bin/env ruby -c %<cr>
 
 autocmd FileType python :nmap <up>  <esc>:w<cr>:!/usr/bin/env python %<cr>
+autocmd FileType twig setfiletype html
 
 " 拡張子がctpだったらphpと認識
 augroup filetypedetect
     au! BufRead,BufNewFile *.ctp setfiletype php
+    au! BufRead,BufNewFile *.less setfiletype css
     au! BufRead,BufNewFile *.xul setfiletype xul
     au! BufRead,BufNewFile *.jsm setfiletype javascript
-    au! BufRead,BufNewFile *.twig setfiletype python
+    au! BufRead,BufNewFile *.twig setfiletype html
 augroup END
 
 let nohl_xul_atts = 1
@@ -347,7 +355,10 @@ endif
 ""特殊文字(SpecialKey)の見える化。listcharsはlcsでも設定可能。
 ""trailは行末スペース。
 "set list
-"set listchars=tab:^_,trail:-,nbsp:%,extends:>,precedes:<
+set listchars=tab:^_,trail:-,nbsp:%,extends:>,precedes:<
+
+""qbuf
+let g:qb_hotkey = "<F9>"
 
 
 ""NERDTree
@@ -360,7 +371,7 @@ nmap <silent> <F7> :NERDTreeToggle<CR>
 "let Tlist_Process_File_Always = 1
 "let Tlist_Enable_Fold_Column = 0
 "let tlist_php_settings = 'php;c:class;d:constant;f:function'
-nmap <silent> <F8> :TlistToggle<CR>
+"nmap <silent> <F8> :TlistToggle<CR>
 
 "PHPSettings
 "autocmd FileType php " :set omnifunc=phpcomplete#CompletePHP
@@ -387,4 +398,7 @@ if &term == "xterm-color"
     fixdel
 endif
 
-
+call pathogen#infect()
+"au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
+"nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space>
+"au BufNewFile,BufRead *.less            setf less
