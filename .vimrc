@@ -1,272 +1,142 @@
 " .vimrc file
 "
 " Maintainer:   Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
+" Based On:     yuroyoro https://github.com/yuroyoro/dotfiles
 " Based On:     Sotaro KARASAWA <sotaro.k@gmail.com>
 " Based On:     Daichi Kamemoto <daich@asial.co.jp>
-" Last Change:  2011/06/02
-" Version:      0.0.3
+" Last Change:  2013/06/23
+" Version:      0.0.4
 " https://github.com/marucc/dotfiles
 """""
 
 
-" When started as "evim", evim.vim will already have done these settings.
-if v:progname =~? "evim"
-  finish
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" NeoBundle Settings
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+set nocompatible
+filetype off
+
+if has('vim_starting')
+  set runtimepath+=~/.vim/bundle/neobundle.vim
+  call neobundle#rc(expand('~/.vim/bundle'))
 endif
 
-"""""
-" Initialize Settings
-"""""
-"set t_Co=256
-set nocompatible
-set history=999
-set encoding=utf-8
+" Programming {{{
+  " quickrun.vim : 編集中のファイルを簡単に実行できるプラグイン
+  "NeoBundle 'thinca/vim-quickrun'
+  " Pydiction : Python用の入力補完
+  NeoBundle 'Pydiction'
+  " ソースコード上のメソッド宣言、変数宣言の一覧を表示
+  NeoBundle 'taglist.vim'
+" }}}
 
-"""""
+" Syntax {{{
+  " haml
+  "NeoBundle 'haml.zip'
+  " JavaScript
+  NeoBundle 'JavaScript-syntax'
+  " jQuery
+  NeoBundle 'jQuery'
+  " nginx conf
+  NeoBundle 'nginx.vim'
+  " markdown
+  NeoBundle 'tpope/vim-markdown'
+  " coffee script
+  NeoBundle 'kchmck/vim-coffee-script'
+  " python
+  NeoBundle 'yuroyoro/vim-python'
+  " scala
+  "NeoBundle 'yuroyoro/vim-scala'
+  " clojure
+  "NeoBundle 'jondistad/vimclojure'
+  " ghc-mod
+  "NeoBundle 'eagletmt/ghcmod-vim'
+  " syntax checking plugins exist for eruby, haml, html, javascript, php, python, ruby and sass.
+  NeoBundle 'scrooloose/syntastic'
+" }}}
+
+" Buffer {{{
+  " DumbBuf.vim : quickbufっぽくbufferを管理。 "<Leader>b<Space>でBufferList
+  NeoBundle 'DumbBuf'
+  " NERDTree : ツリー型エクスプローラ
+  NeoBundle 'The-NERD-tree'
+" }}}
+
+" Encording {{{
+  NeoBundle 'banyan/recognize_charcode.vim'
+" }}}
+
+filetype plugin indent on     " Required!
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" NeoBundle Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" Basic Settings
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+let mapleader = ","              " キーマップリーダー
+set scrolloff=5                  " スクロール時の余白確保
+set textwidth=0                  " 一行に長い文章を書いていても自動折り返しをしない
+set nobackup                     " バックアップ取らない
+set autoread                     " 他で書き換えられたら自動で読み直す
+set noswapfile                   " スワップファイル作らない
+set hidden                       " 編集中でも他のファイルを開けるようにする
+set backspace=indent,eol,start   " バックスペースでなんでも消せるように
+set formatoptions=lmoq           " テキスト整形オプション，マルチバイト系を追加
+set vb t_vb=                     " ビープをならさない
+set browsedir=buffer             " Exploreの初期ディレクトリ
+set whichwrap=b,s,h,l,<,>,[,]    " カーソルを行頭、行末で止まらないようにする
+set showcmd                      " コマンドをステータス行に表示
+set showmode                     " 現在のモードを表示
+set viminfo='50,<1000,s100,\"50  " viminfoファイルの設定
+set modelines=0                  " モードラインは無効
+
+" OSのクリップボードを使用する
+" set clipboard+=unnamed
+" ターミナルでマウスを使用できるようにする
+set mouse=a
+set guioptions+=a
+set ttymouse=xterm2
+
+"ヤンクした文字は、システムのクリップボードに入れる"
+"set clipboard=unnamed
+" 挿入モードでCtrl+kを押すとクリップボードの内容を貼り付けられるようにする "
+"imap <C-p>  <ESC>"*pa
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" Basic Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 " Status line Settings
-"""""
-set laststatus=2
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+set laststatus=2 " 常にステータスラインを表示
+
+"カーソルが何行目の何列目に置かれているかを表示する
 set ruler
+
 set title
-set showcmd
-set showmode
-" statuslineの表示設定。GetB()呼び出しも実行
+
+" vim-powerlineでフォントにパッチを当てないなら以下をコメントアウト
+let g:Powerline_symbols = 'fancy'
+
+"ステータスラインに文字コードと改行文字を表示する
 set statusline=%<[%n]%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}\ [%{GetB()}]%=%l,%c%V%8P
+
 " コマンドの補完をシェルっぽく
 set wildmode=list:longest
 
-"""""
-" Behavior Settings
-"""""
-set backspace=indent,eol,start
-set autoindent smartindent
-set incsearch
-" 検索文字列が小文字のときはCaseを無視。大文字が混在している場合は区別する。
-set ignorecase
-set smartcase
-set wrapscan
-" バッファが編集中でもファイルを開けるようにする
-set hidden
-" 編集中のファイルが外部のエディタから変更された場合には、自動で読み直し
-set autoread
-" tagsディレクトリを探し出してctagsを有効にする
-"if has("autochdir")
-"    set autochdir
-"    set tags=tags;
-"endif
-" 前回終了したカーソル行に移動
-autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
+"自動的に QuickFix リストを表示する
+autocmd QuickfixCmdPost make,grep,grepadd,vimgrep,vimgrepadd cwin
+autocmd QuickfixCmdPost lmake,lgrep,lgrepadd,lvimgrep,lvimgrepadd lwin
 
-"""""
-" View window Settings
-"""""
-set list
-set listchars=tab:\ \ 
-set number
-set showmatch
-set hlsearch
-set wrap
-set shiftwidth=4
-"set visualbell
-set expandtab
-set ts=4
-
-" key mapping
-nnoremap <Space>w :<C-u>write<CR>
-nnoremap <Space>q :<C-u>quit<CR>
-nnoremap <Space>Q :<C-u>quit!<CR>
-nnoremap <Nul> <ESC>
-" buffer
-nnoremap <Space>h :<C-u>bp<CR>
-nnoremap <Space>j :<C-u>bn<CR>
-nnoremap <Space>d :<C-u>bd<CR>
-
-imap <C-@> <C-[>
-
-" swap, backup
-"set directory=~/.vim/tmp
-set backupdir=~/.vim/tmp
-
-"""""
-" Japanese Settins by ずんWik
-"
-" 文字コードの自動認識
-"""""
-if &encoding !=# 'utf-8'
-  set encoding=japan
-  set fileencoding=japan
-endif
-if has('iconv')
-  let s:enc_euc = 'euc-jp'
-  let s:enc_jis = 'iso-2022-jp'
-  " iconvがeucJP-msに対応しているかをチェック
-  if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
-    let s:enc_euc = 'eucjp-ms'
-    let s:enc_jis = 'iso-2022-jp-3'
-  " iconvがJISX0213に対応しているかをチェック
-  elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
-    let s:enc_euc = 'euc-jisx0213'
-    let s:enc_jis = 'iso-2022-jp-3'
-  endif
-  " fileencodingsを構築
-  if &encoding ==# 'utf-8'
-    let s:fileencodings_default = &fileencodings
-    let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
-    let &fileencodings = &fileencodings .','. s:fileencodings_default
-    unlet s:fileencodings_default
-  else
-    let &fileencodings = &fileencodings .','. s:enc_jis
-    set fileencodings+=utf-8,ucs-2le,ucs-2
-    if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
-      set fileencodings+=cp932
-      set fileencodings-=euc-jp
-      set fileencodings-=euc-jisx0213
-      set fileencodings-=eucjp-ms
-      let &encoding = s:enc_euc
-      let &fileencoding = s:enc_euc
-    else
-      let &fileencodings = &fileencodings .','. s:enc_euc
-    endif
-  endif
-  " 定数を処分
-  unlet s:enc_euc
-  unlet s:enc_jis
-endif
-" 日本語を含まない場合は fileencoding に encoding を使うようにする
-if has('autocmd')
-  function! AU_ReCheck_FENC()
-    if &fileencoding =~# 'iso-2022-jp' && search("[^\x01-\x7e]", 'n') == 0
-      let &fileencoding=&encoding
-    endif
-  endfunction
-  autocmd BufReadPost * call AU_ReCheck_FENC()
-endif
-" 改行コードの自動認識
-set fileformats=unix,dos,mac
-" □とか○の文字があってもカーソル位置がずれないようにする
-if exists('ambiwidth')
-  set ambiwidth=double
-endif
-
-"""""
-" Highlight Settings
-"""""
-syntax on
-hi Comment ctermfg=Red
-hi Function ctermfg=cyan
-
-
-"""""
-" 編集時用設定 
-
-"""""
-set helpfile=$VIMRUNTIME/doc/help.txt
-"set complete=+k 不正な文字といわれるのでコメントアウト。
-if has("autocmd")
-    " PHPのときは辞書を使う
-    autocmd FileType php :set dictionary+=~/.vim/dict/php.dict
-        "\ dictionary+=~/.vim/dict/php_constants.dict
-    autocmd FileType ctp :set dictionary+=~/.vim/dict/php.dict
-        "\ dictionary+=~/.vim/dict/php_constants.dict
-    autocmd FileType rb :set dictionary+=~/.vim/dict/ruby.dict
-    autocmd FileType pl :set dictionary+=~/.vim/dict/perl.dict
-    autocmd FileType pm :set dictionary+=~/.vim/dict/perl.dict
-
-    autocmd FileType html setlocal ts=4 sw=4
-    autocmd FileType smarty setlocal ts=4 sw=4
-    autocmd FileType make setlocal nomodeline noexpandtab
-    autocmd FileType yaml setlocal ts=4 sw=4
-    autocmd FileType css setlocal ts=4 sw=4
-    autocmd FileType less setlocal ts=4 sw=4
-    autocmd FileType javascript setlocal ts=4 sw=4
-    autocmd FileType python setlocal ts=4 sw=4
-    autocmd FileType coffee setlocal ts=4 sw=4
-
-    "autocmd BufNewFile *.php 0r ~/.vim/skeleton/php.skel
-    "autocmd BufNewFile *.py 0r ~/.vim/skeleton/python.skel
-    "autocmd BufNewFile *.rb 0r ~/.vim/skeleton/ruby.skel
-    "autocmd BufNewFile *.pl 0r ~/.vim/skeleton/perl.skel
-    "autocmd BufNewFile *.html 0r ~/.vim/skeleton/html.skel
-    "autocmd BufNewFile *.tpl 0r ~/.vim/skeleton/html.skel
-
-    " バッファの。。。なんかよくわからんけど追加。あとで。
-    " autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
-    autocmd Filetype *
-                \   if &omnifunc == "" |
-                \           setlocal omnifunc=syntaxcomplete#Complete |
-                \   endif
-
-endif
-" ,e で編集中のファイルタイプを判別して自動的にCLIの実行をしてくれる。
-nmap ,e :execute '!' &ft ' %'<CR>
-" yankringの割り当て変更
-if has("viminfo")
-    " yankrignによるviminfoの編集の問題らしい。こうしておかないと、yankringにおこられる。
-    set vi^=!
-endif
-nmap ,y :YRShow<CR>
-
-
-"""""
-" 上下キーで実行 or Lint
-"""""
-
-autocmd filetype php :setl makeprg=php\ -l\ %\ 
-autocmd filetype php :setl errorformat=%m\ in\ %f\ on\ line\ %l
-autocmd filetype php :setl shellpipe=2>&1\ >
-autocmd FileType php :nmap <up>   <esc>:w<cr>:!/usr/bin/env php %<cr>
-autocmd FileType php :nmap <down> <esc>:w<cr>:make<cr><cr>
-autocmd FileType php :nmap ,l     <esc>:w<cr>:make<cr><cr>
-let errormarker_errortext = "->"
-
-autocmd FileType cpp :nmap <up>   <esc>:w<cr>:!g++ % && ./a.out<cr>
-
-autocmd FileType c :nmap <up>   <esc>:w<cr>:!gcc % && ./a.out<cr>
-
-autocmd FileType perl  :nmap <up>   <esc>:w<cr>:!/usr/bin/env perl %<cr>
-autocmd FileType perl  :nmap <down> <esc>:w<cr>:!/usr/bin/env perl -cw %<cr>
-
-autocmd FileType ruby  :nmap <up>   <esc>:w<cr>:!/usr/bin/env ruby %<cr>
-autocmd FileType ruby  :nmap <down> <esc>:w<cr>:!/usr/bin/env ruby -c %<cr>
-
-autocmd FileType python :nmap <up>  <esc>:w<cr>:!/usr/bin/env python %<cr>
-autocmd FileType twig setfiletype html
-
-" 拡張子がctpだったらphpと認識
-augroup filetypedetect
-    au! BufRead,BufNewFile *.ctp setfiletype php
-    au! BufRead,BufNewFile *.less setfiletype css
-    au! BufRead,BufNewFile *.xul setfiletype xul
-    au! BufRead,BufNewFile *.jsm setfiletype javascript
-    au! BufRead,BufNewFile *.twig setfiletype html
-augroup END
-
-let nohl_xul_atts = 1
-
-"""""
-" mini buffer explorer プラグイン用設定
-"""""
-"let g:miniBufExplMapWindowNavVim=1 "hjklで移動
-"let g:miniBufExplSplitBelow=0  " Put new window above
-"let g:miniBufExplMapWindowNavArrows=1
-"let g:miniBufExplMapCTabSwitchBufs=1
-"let g:miniBufExplModSelTarget=1
-"let g:miniBufExplSplitToEdge=1
-
-
-"""""
-" Add Functions
-"""""
-
-" GetB
-" カーソル上の文字のバイナリコードを表示してくれる。
-"""""
 function! GetB()
   let c = matchstr(getline('.'), '.', col('.') - 1)
   let c = iconv(c, &enc, &fenc)
   return String2Hex(c)
 endfunction
-" :help eval-examples
+" help eval-examples
 " The function Nr2Hex() returns the Hex string of a number.
 func! Nr2Hex(nr)
   let n = a:nr
@@ -288,19 +158,136 @@ func! String2Hex(str)
   endwhile
   return out
 endfunc
-
-" /GetB
-"""""
-
-""""
-" buftabs
-"バッファタブにパスを省略してファイル名のみ表示する(buftabs.vim)
-let g:buftabs_only_basename=1
-"バッファタブをステータスライン内に表示する
-let g:buftabs_in_statusline=1
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" Status line Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
-" 全角スペース、末尾の半角スペース、タブを色づけする
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" Indent Settings
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+set autoindent smartindent
+set incsearch
+set ignorecase
+set smartcase
+set wrapscan
+set expandtab
+set ts=4
+" softtabstopはTabキー押し下げ時の挿入される空白の量，0の場合はtabstopと同じ，BSにも影響する
+set tabstop=4 shiftwidth=4 softtabstop=0
+if has("autocmd")
+  "ファイルタイプの検索を有効にする
+  filetype plugin on
+  "そのファイルタイプにあわせたインデントを利用する
+  filetype indent on
+  " これらのftではインデントを無効に
+  "autocmd FileType php filetype indent off
+
+  autocmd FileType apache     setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType aspvbs     setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType cpp        setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType cs         setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType css        setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType diff       setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType eruby      setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType html       setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType java       setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType javascript setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType perl       setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType php        setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType ruby       setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType haml       setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType sh         setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType sql        setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType vb         setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType vim        setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType wsh        setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType xhtml      setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType xml        setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType yaml       setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType zsh        setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType scala      setlocal sw=2 sts=2 ts=2 et
+endif
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" Indent Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" View window Settings
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+set showmatch         " 括弧の対応をハイライト
+set number            " 行番号表示
+set list              " 不可視文字表示
+set listchars=tab:^_,trail:-,nbsp:%,extends:>,precedes:< " 不可視文字の表示形式
+set display=uhex      " 印字不可能文字を16進数で表示
+" 全角スペースの表示
+"highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=darkgray
+"match ZenkakuSpace /　/
+" カーソル行をハイライト
+set cursorline
+" □とか○の文字があってもカーソル位置がずれないようにする
+if exists('ambiwidth')
+  set ambiwidth=double
+endif
+" カレントウィンドウにのみ罫線を引く
+augroup cch
+  autocmd! cch
+  autocmd WinLeave * set nocursorline
+  autocmd WinEnter,BufRead * set cursorline
+augroup END
+hi clear CursorLine
+hi CursorLine gui=underline
+highlight CursorLine ctermbg=black guibg=black
+
+" コマンド実行中は再描画しない
+set lazyredraw
+" 高速ターミナル接続を行う
+set ttyfast
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" View window Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" Complete Settings
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+set wildmenu               " コマンド補完を強化
+set wildchar=<tab>         " コマンド補完を開始するキー
+"set wildmode=list:full     " リスト表示，最長マッチ
+set history=1000           " コマンド・検索パターンの履歴数
+set complete+=k            " 補完に辞書ファイル追加
+
+" Ex-modeでの<C-p><C-n>をzshのヒストリ補完っぽくする
+cnoremap <C-p> <Up>
+cnoremap <Up>  <C-p>
+cnoremap <C-n> <Down>
+cnoremap <Down>  <C-n>
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" Complete Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" Search Settings
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+set wrapscan   " 最後まで検索したら先頭へ戻る
+set ignorecase " 大文字小文字無視
+set smartcase  " 検索文字列に大文字が含まれている場合は区別して検索する
+set incsearch  " インクリメンタルサーチ
+set hlsearch   " 検索文字をハイライト
+"Escの2回押しでハイライト消去
+nmap <ESC><ESC> ;nohlsearch<CR><ESC>
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" Search Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" Color Settings
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 if has("syntax")
     syntax on
     function! ActivateInvisibleIndicator()
@@ -328,77 +315,93 @@ if has("syntax")
     highlight DiffDelete term=bold cterm=bold ctermfg=Red ctermbg=Blue
     highlight DiffText   term=reverse cterm=bold ctermfg=Yellow ctermbg=Green
 endif
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" Color Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
-""Tab文字も区別されずにハイライトされるので、区別したいときはTab文字の表示を別に
-""設定する必要がある。
-"function! SOLSpaceHilight()
-"    "syntax match SOLSpace "^\s\+" display containedin=ALL
-"    "highlight SOLSpace term=underline ctermbg=Gray
-"endf
-""全角スペースをハイライトさせる。
-"function! JISX0208SpaceHilight()
-"    syntax match JISX0208Space "　" display containedin=ALL
-"    highlight JISX0208Space term=underline ctermbg=LightCyan
-"endf
-""syntaxの有無をチェックし、新規バッファと新規読み込み時にハイライトさせる
-"if has("syntax")
-"    syntax on
-"        augroup invisible
-"        autocmd! invisible
-"        autocmd BufNew,BufRead * call SOLSpaceHilight()
-"        autocmd BufNew,BufRead * call JISX0208SpaceHilight()
-"    augroup END
-"endif
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" Encoding Settings
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+set ffs=unix,dos,mac  " 改行文字
+set encoding=utf-8    " デフォルトエンコーディング
+
+" 文字コード認識はbanyan/recognize_charcode.vimへ
+
+" cvsの時は文字コードをeuc-jpに設定
+autocmd FileType cvs :set fileencoding=euc-jp
+" 以下のファイルの時は文字コードをutf-8に設定
+autocmd FileType svn :set fileencoding=utf-8
+autocmd FileType js :set fileencoding=utf-8
+autocmd FileType coffee :set fileencoding=utf-8
+autocmd FileType css :set fileencoding=utf-8
+autocmd FileType less :set fileencoding=utf-8
+autocmd FileType html :set fileencoding=utf-8
+autocmd FileType xml :set fileencoding=utf-8
+autocmd FileType java :set fileencoding=utf-8
+autocmd FileType scala :set fileencoding=utf-8
+autocmd FileType py :set fileencoding=utf-8
+autocmd FileType php :set fileencoding=utf-8
+
+" ワイルドカードで表示するときに優先度を低くする拡張子
+set suffixes=.pyc,.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
+
+" 指定文字コードで強制的にファイルを開く
+command! Cp932 edit ++enc=cp932
+command! Eucjp edit ++enc=euc-jp
+command! Iso2022jp edit ++enc=iso-2022-jp
+command! Utf8 edit ++enc=utf-8
+command! Jis Iso2022jp
+command! Sjis Cp932
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" Encoding Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" Move Settings
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" 前回終了したカーソル行に移動
+autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
+" ビジュアルモード時vで行末まで選択
+vnoremap v $h
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" Move Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+" Plugins Settings
+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 "
+"------------------------------------
+"" Pydiction
+"------------------------------------
+let g:pydiction_location = '~/.vim/bundle/Pydiction/complete-dict'
 "
-""特殊文字(SpecialKey)の見える化。listcharsはlcsでも設定可能。
-""trailは行末スペース。
-"set list
-set listchars=tab:^_,trail:-,nbsp:%,extends:>,precedes:<
-
-""qbuf
-let g:qb_hotkey = "<F9>"
-
-
-""NERDTree
+"------------------------------------
+" DumbBuf.vim
+"------------------------------------
+"<Leader>b<Space>でBufferList
+"let dumbbuf_hotkey = '<Leader>b<Space>'
+let dumbbuf_hotkey=';;'
+let dumbbuf_mappings = {
+    \ 'n': {
+        \'<Esc>': { 'opt': '<silent>', 'mapto': ':<C-u>close<CR>' }
+    \}
+\}
+let dumbbuf_single_key  = 1
+let dumbbuf_updatetime  = 1    " &updatetimeの最小値
+let dumbbuf_wrap_cursor = 0
+let dumbbuf_remove_marked_when_close = 1
+"
+"------------------------------------
+"" NERDTree
 nmap <silent> <F7> :NERDTreeToggle<CR>
-""TagList
-"let Tlist_Ctags_Cmd = "/usr/local/bin/ctags"
-"let Tlist_Inc_Winwidth = 1
-"let Tlist_Exit_OnlyWindow = 1
-"let Tlist_File_Fold_Auto_Close = 1
-"let Tlist_Process_File_Always = 1
-"let Tlist_Enable_Fold_Column = 0
-"let tlist_php_settings = 'php;c:class;d:constant;f:function'
-"nmap <silent> <F8> :TlistToggle<CR>
+let NERDTreeIgnore=['\.pyc$']
+"------------------------------------
+"
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+" Plugins Settings
+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-"PHPSettings
-"autocmd FileType php " :set omnifunc=phpcomplete#CompletePHP
-"let php_sql_query=1
-"let php_htmllnStrings=1
-"let php_noShortTags=1
-"let php_folding=1
-
-"VIM Diff
-"hi DiffAdd    ctermfg=cyan ctermbg=black
-"hi DiffChange ctermfg=white ctermbg=darkcyan
-"hi DiffDelete ctermfg=red ctermbg=darkgray
-"hi DiffText   ctermfg=white ctermbg=darkgray
-
-"PasteMode Switch
-set pastetoggle=<F11>
-
-" outputzの設定を読み込む
-" source ~/.outputz
-
-
-if &term == "xterm-color"
-    set t_kb=
-    fixdel
-endif
-
-call pathogen#infect()
-"au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
-"nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space>
-"au BufNewFile,BufRead *.less            setf less
