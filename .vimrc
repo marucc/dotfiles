@@ -28,6 +28,10 @@ endif
   NeoBundle 'Pydiction'
   " ソースコード上のメソッド宣言、変数宣言の一覧を表示
   NeoBundle 'taglist.vim'
+  " インデントの可視化
+  NeoBundle 'nathanaelkane/vim-indent-guides'
+  " CSSソート
+  NeoBundle 'csscomb/CSScomb-for-Vim'
 " }}}
 
 " Syntax {{{
@@ -43,6 +47,8 @@ endif
   NeoBundle 'tpope/vim-markdown'
   " coffee script
   NeoBundle 'kchmck/vim-coffee-script'
+  " less
+  NeoBundle 'groenewege/vim-less'
   " python
   NeoBundle 'yuroyoro/vim-python'
   " scala
@@ -76,7 +82,7 @@ filetype plugin indent on     " Required!
 " Basic Settings
 ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 let mapleader = ","              " キーマップリーダー
-set scrolloff=5                  " スクロール時の余白確保
+set scrolloff=3                  " スクロール時の余白確保
 set textwidth=0                  " 一行に長い文章を書いていても自動折り返しをしない
 set nobackup                     " バックアップ取らない
 set autoread                     " 他で書き換えられたら自動で読み直す
@@ -188,10 +194,11 @@ if has("autocmd")
   autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
   autocmd FileType cpp        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType cs         setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType css        setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType css        setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType less       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType diff       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType eruby      setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType html       setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType html       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType java       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType javascript setlocal sw=4 sts=4 ts=4 et
   autocmd FileType perl       setlocal sw=4 sts=4 ts=4 et
@@ -227,7 +234,7 @@ set display=uhex      " 印字不可能文字を16進数で表示
 "highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=darkgray
 "match ZenkakuSpace /　/
 " カーソル行をハイライト
-set cursorline
+"set cursorline
 " □とか○の文字があってもカーソル位置がずれないようにする
 if exists('ambiwidth')
   set ambiwidth=double
@@ -400,6 +407,23 @@ let dumbbuf_remove_marked_when_close = 1
 nmap <silent> <F7> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$']
 "------------------------------------
+"
+"------------------------------------
+" vim-indent-guides
+"------------------------------------
+"nnoremap <silent> <Space>id :<C-u>IndentGuidesToggle<Enter>
+let g:indent_guides_auto_colors = 0
+"let g:indent_guides_start_level = 4
+"let g:indent_guides_guide_size = 1
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red ctermbg=3
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+"if 'dark' == &background
+"    hi IndentGuidesOdd  ctermbg=black
+"    hi IndentGuidesEven ctermbg=darkgrey
+"else
+"    hi IndentGuidesOdd  ctermbg=white
+"    hi IndentGuidesEven ctermbg=lightgrey
+"endif
 "
 "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 " Plugins Settings
