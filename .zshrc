@@ -3,7 +3,7 @@
 #
 # Maintainer  : Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 # Based On    : Sotaro KARASAWA <sotaro.k@gmail.com>
-# Last Change : 2011/06/02
+# Last Change : 2014/01/28
 # https://github.com/marucc/dotfiles
 ####
 
@@ -34,6 +34,15 @@ if [ -e /usr/local/bin/virtualenvwrapper.sh ]; then
     export PIP_RESPECT_VIRTUALENV=true
     export PIP_REQUIRE_VIRTUALENV=true
     source /usr/local/bin/virtualenvwrapper.sh
+fi
+
+# zsh-notify/notify.plugin
+if [ -e /usr/local/bin/terminal-notifier ]; then
+    export SYS_NOTIFIER="/usr/local/bin/terminal-notifier"
+    if [ -e ~/.zshrc.d/zsh-notify/notify.plugin.zsh ]; then
+        autoload add-zsh-hook
+        source ~/.zshrc.d/zsh-notify/notify.plugin.zsh
+    fi
 fi
 
 # 関数
