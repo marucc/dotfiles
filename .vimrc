@@ -4,8 +4,7 @@
 " Based On:     yuroyoro https://github.com/yuroyoro/dotfiles
 " Based On:     Sotaro KARASAWA <sotaro.k@gmail.com>
 " Based On:     Daichi Kamemoto <daich@asial.co.jp>
-" Last Change:  2013/06/23
-" Version:      0.0.4
+" Last Change:  2014/04/01
 " https://github.com/marucc/dotfiles
 """""
 
@@ -49,6 +48,8 @@ endif
   NeoBundle 'kchmck/vim-coffee-script'
   " less
   NeoBundle 'groenewege/vim-less'
+  " stylus
+  NeoBundle 'vim-scripts/vim-stylus'
   " python
   NeoBundle 'yuroyoro/vim-python'
   " scala
@@ -59,6 +60,8 @@ endif
   "NeoBundle 'eagletmt/ghcmod-vim'
   " syntax checking plugins exist for eruby, haml, html, javascript, php, python, ruby and sass.
   NeoBundle 'scrooloose/syntastic'
+  " yaml
+  NeoBundle 'chase/vim-ansible-yaml'
 " }}}
 
 " Buffer {{{
