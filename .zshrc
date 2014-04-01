@@ -3,7 +3,7 @@
 #
 # Maintainer  : Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 # Based On    : Sotaro KARASAWA <sotaro.k@gmail.com>
-# Last Change : 2014/02/13
+# Last Change : 2014/04/01
 # https://github.com/marucc/dotfiles
 ####
 
@@ -26,9 +26,19 @@ export CLICOLOR=1
 export SCREENDIR=$HOME/.screen
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
+# anyenv
+if [ -d $HOME/.anyenv ] ; then
+    export PATH="$HOME/.anyenv/bin:$PATH"
+    eval "$(anyenv init -)"
+ fi
+
 # python
 if [ -e /usr/local/bin/virtualenvwrapper.sh ]; then
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.7
+    if [ -e /usr/local/bin/python2.7 ]; then
+        export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python2.7
+    else
+        export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.7
+    fi
     export WORKON_HOME=${HOME}/venvs
     export PIP_DOWNLOAD_CACHE=${HOME}/.pip_cache
     export PIP_RESPECT_VIRTUALENV=true
