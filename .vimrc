@@ -4,7 +4,7 @@
 " Based On:     yuroyoro https://github.com/yuroyoro/dotfiles
 " Based On:     Sotaro KARASAWA <sotaro.k@gmail.com>
 " Based On:     Daichi Kamemoto <daich@asial.co.jp>
-" Last Change:  2014/04/01
+" Last Change:  2014/04/09
 " https://github.com/marucc/dotfiles
 """""
 
@@ -49,7 +49,7 @@ endif
   " less
   NeoBundle 'groenewege/vim-less'
   " stylus
-  NeoBundle 'vim-scripts/vim-stylus'
+  NeoBundle 'wavded/vim-stylus'
   " python
   NeoBundle 'yuroyoro/vim-python'
   " scala
