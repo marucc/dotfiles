@@ -30,6 +30,7 @@ export LSCOLORS=ExFxCxDxBxegedabagacad
 if [ -d $HOME/.anyenv ] ; then
     export PATH="$HOME/.anyenv/bin:$PATH"
     eval "$(anyenv init -)"
+    eval "$(rbenv init -)"
  fi
 
 # python
@@ -63,6 +64,9 @@ fpath=(~/.zshrc.d/completion $fpath)
 ## 補完候補の色づけ
 export ZLS_COLORS=$LS_COLORS
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+if [ -e /usr/local/share/zsh-completions ]; then
+    fpath=(/usr/local/share/zsh-completions $fpath)
+fi
 
 # エイリアスの設定
 case "${OSTYPE}" in
