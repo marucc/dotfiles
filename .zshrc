@@ -3,7 +3,7 @@
 #
 # Maintainer  : Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 # Based On    : Sotaro KARASAWA <sotaro.k@gmail.com>
-# Last Change : 2014/04/01
+# Last Change : 2014/04/09
 # https://github.com/marucc/dotfiles
 ####
 
@@ -33,17 +33,15 @@ if [ -d $HOME/.anyenv ] ; then
  fi
 
 # python
-if [ -e /usr/local/bin/virtualenvwrapper.sh ]; then
-    if [ -e /usr/local/bin/python2.7 ]; then
-        export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python2.7
-    else
-        export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.7
-    fi
+PYENV=`which-command pyenv`
+VIRTUALENVWRAPPER=`$PYENV which virtualenvwrapper.sh || echo '/usr/local/bin/virtualenvwrapper.sh'`
+if [ -e $VIRTUALENVWRAPPER ]; then
+    export VIRTUALENVWRAPPER_PYTHON=`$PYENV which python2.7`
     export WORKON_HOME=${HOME}/venvs
     export PIP_DOWNLOAD_CACHE=${HOME}/.pip_cache
     export PIP_RESPECT_VIRTUALENV=true
     export PIP_REQUIRE_VIRTUALENV=true
-    source /usr/local/bin/virtualenvwrapper.sh
+    source $VIRTUALENVWRAPPER
 fi
 
 # zsh-notify/notify.plugin
