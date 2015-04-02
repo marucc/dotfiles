@@ -112,6 +112,21 @@ alias gmv='git mv'
 alias grm='git rm'
 alias gci='git commit'
 alias gcia='git commit -a'
+gps() {
+    BUF=`git push 2>&1`
+    CMD=`echo "$BUF" | grep 'git push --set-upstream origin' | sed 's/ *//'`
+    if [ -n "$CMD" ]; then
+        echo -n "${CMD} [Y/n] "
+        read ANSWER
+        case `echo $ANSWER | tr y Y` in
+            "" | Y* )
+                eval "$CMD" && git push --tags
+                ;;
+        esac
+    else
+      git push --tags
+      echo "$BUF"
+    fi
 alias gps='git push;git push --tags'
 alias gpl='git pull;git pull --tag'
 alias gmg='git pull origin'
