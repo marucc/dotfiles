@@ -165,8 +165,8 @@ case ${UID} in
 esac
 
 autoload -Uz vcs_info
-zstyle ':vcs_info:*' formats '(%s)-%b '
-zstyle ':vcs_info:*' actionformats '(%s)-%b|%a '
+zstyle ':vcs_info:*' formats '(%s) %b '
+zstyle ':vcs_info:*' actionformats '(%s) %b|%a '
 precmd () {
         psvar=()
             LANG=en_US.UTF-8 vcs_info
