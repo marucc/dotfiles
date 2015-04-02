@@ -127,7 +127,6 @@ gps() {
       git push --tags
       echo "$BUF"
     fi
-alias gps='git push;git push --tags'
 alias gpl='git pull;git pull --tag'
 alias gmg='git pull origin'
 alias gco='git checkout'
