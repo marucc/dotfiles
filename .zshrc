@@ -16,9 +16,6 @@ export MANPATH=/usr/local/man:/usr/share/man
 # mysql
 export MYSQL_PS1="\u@\h[\d]> "
 
-# elixir
-export SERVER_STATUS='devlocal'
-
 # エディタを vim に設定
 export SVN_EDITOR="vim"
 export EDITOR="vim"
