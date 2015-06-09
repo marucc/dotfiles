@@ -37,7 +37,10 @@ endif
   " haml
   "NeoBundle 'haml.zip'
   " JavaScript
-  NeoBundle 'JavaScript-syntax'
+  "NeoBundle 'JavaScript-syntax'
+  NeoBundle 'pangloss/vim-javascript'
+  " JSX
+  NeoBundle 'mxw/vim-jsx'
   " jQuery
   NeoBundle 'jQuery'
   " nginx conf
@@ -59,7 +62,7 @@ endif
   " ghc-mod
   "NeoBundle 'eagletmt/ghcmod-vim'
   " syntax checking plugins exist for eruby, haml, html, javascript, php, python, ruby and sass.
-  NeoBundle 'scrooloose/syntastic'
+  "NeoBundle 'scrooloose/syntastic'
   " yaml
   NeoBundle 'chase/vim-ansible-yaml'
 " }}}
@@ -203,7 +206,7 @@ if has("autocmd")
   autocmd FileType eruby      setlocal sw=4 sts=4 ts=4 et
   autocmd FileType html       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType java       setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType javascript setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType javascript setlocal sw=2 sts=2 ts=2 et
   autocmd FileType perl       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType php        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
@@ -427,6 +430,11 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
 "    hi IndentGuidesOdd  ctermbg=white
 "    hi IndentGuidesEven ctermbg=lightgrey
 "endif
+"
+"------------------------------------
+" vim-jsx
+"------------------------------------
+let g:jsx_ext_required = 0
 "
 "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 " Plugins Settings
