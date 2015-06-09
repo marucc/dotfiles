@@ -105,7 +105,6 @@ alias gst='git status'
 alias gtg='git tag'
 alias gtl='list=`git tag`;echo -ne $list|grep "^release_"|sed "s/release_\(.*\)/\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/release_\1/";echo -ne $list|grep -v "^release_"|sort'
 alias gbl='git branch'
-#alias gbls='git remote prune origin;git branch -a'
 gbls() {
     git remote prune origin 2>&1 | grep '[pruned]' | awk '{print $3}' | sed 's/origin\///' | xargs -n1 git branch -d
     git branch -a
@@ -134,7 +133,21 @@ gps() {
 }
 alias gpl='git pull;git pull --tag'
 alias gmg='git pull origin'
-alias gco='git checkout'
+gco() {
+    BRANCH=`echo "$1" | grep '^remotes/origin/' | sed 's/^remotes\/origin\///'`
+    if [ -n "$BRANCH" ]; then
+        CMD="git checkout -b ${BRANCH} origin/${BRANCH}"
+        echo -n "${CMD} [Y/n] "
+        read ANSWER
+        case `echo $ANSWER | tr y Y` in
+            "" | Y* )
+                eval "$CMD"
+                ;;
+        esac
+    else
+        git checkout $1
+    fi
+}
 
 alias hst='echo -n "# On branch ";hg branch; hg --config "extensions.color=" status'
 alias hbl='hg --config "extensions.color=" branch'
