@@ -133,7 +133,8 @@ gps() {
 }
 alias gpl='git pull;git pull --tag'
 alias gmg='git pull origin'
-gco() {
+alias gco='git checkout'
+gcor() {
     BRANCH=`echo "$1" | grep '^remotes/origin/' | sed 's/^remotes\/origin\///'`
     if [ -n "$BRANCH" ]; then
         CMD="git checkout -b ${BRANCH} origin/${BRANCH}"
