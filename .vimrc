@@ -324,9 +324,9 @@ if has("syntax")
 
     " diff
     highlight DiffAdd    term=bold ctermfg=White ctermbg=Red
-    highlight DiffChange term=bold ctermfg=White ctermbg=Cyan
+    highlight DiffChange term=bold ctermfg=Black ctermbg=Cyan
     highlight DiffDelete term=bold cterm=bold ctermfg=Red ctermbg=Blue
-    highlight DiffText   term=reverse cterm=bold ctermfg=Yellow ctermbg=Green
+    highlight DiffText   term=reverse cterm=bold ctermfg=Black ctermbg=Green
 endif
 "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 " Color Settings
