@@ -56,15 +56,11 @@ fi
 find-grep () { find . -type f -print | xargs grep -n --binary-files=without-match $@ }
 grepv () { grep -irn --binary-files=without-match $@ * | grep -v svn }
 
-fpath=(~/.zshrc.d/completion $fpath)
-
 #Dircolorの読み込み
 ## 補完候補の色づけ
 export ZLS_COLORS=$LS_COLORS
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-if [ -e /usr/local/share/zsh-completions ]; then
-    fpath=(/usr/local/share/zsh-completions $fpath)
-fi
+fpath=(~/.zshrc.d/zsh-completions/src $fpath)
 
 # エイリアスの設定
 case "${OSTYPE}" in
