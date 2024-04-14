@@ -85,26 +85,11 @@ alias vi='vim'
 alias v='vim'
 alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
 
-alias st='svn info; svn st'
-alias stu='svn st -u'
-alias stg='repos=`svn info|grep "URL: .*trunk"|sed "s/URL: \(.*\)trunk/\1/"`;list=`svn ls ${repos}tags`;echo -ne $list|grep "^release_"|sed "s/release_\(.*\)\//\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/release_\1/";echo -ne $list|grep -v "^release_"|sort'
-alias stl='stg'
-alias sdi='svn di'
-alias sad='svn add'
-alias smv='svn mv'
-alias srm='svn rm'
-alias sp='svn up'
-alias sup='svn up'
-alias sci='svn ci'
-
 alias gst='git status'
 alias gtg='git tag'
 alias gtl='list=`git tag`;echo -ne $list|grep "^release_"|sed "s/release_\(.*\)/\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/release_\1/";echo -ne $list|grep -v "^release_"|sort'
-alias gbl='git branch'
-gbls() {
-    git remote prune origin 2>&1 | grep '[pruned]' | awk '{print $3}' | sed 's/origin\///' | xargs -n1 git branch -d
-    git branch -a
-}
+alias gbl='git fetch --prune && git branch -vv | grep ": gone]" | awk "{print $1}" | xargs -r git branch -d 2>&1 | grep -v "not found"; git branch'
+alias gbls='git fetch --prune && git branch -a'
 alias gdi='git diff'
 alias gad='git add'
 alias gmv='git mv'
@@ -145,32 +130,6 @@ gcor() {
         git checkout $1
     fi
 }
-
-alias hst='echo -n "# On branch ";hg branch; hg --config "extensions.color=" status'
-alias hbl='hg --config "extensions.color=" branch'
-alias hbls='hg --config "extensions.color=" branches'
-hdi() {
-    hg --config "extensions.color=" diff --color=always $1 | less -R
-}
-alias had='hg add'
-alias hrm='hg rm'
-alias hci='hg commit'
-alias hps='hg push'
-alias hpl='hg pull;hg update'
-alias hup='hg update'
-alias hmg='hg merge -r'
-hco() {
-    hst
-    FROM=`hg branch`
-    TO=$1
-    hg pull
-    RET=`hg update -c -r $TO`
-    if [ -n "$RET" ]; then
-        hg --config "extensions.color=" update -r $TO
-        hg --config "extensions.color=" diff -r $FROM --stat
-    fi
-}
-
 
 # プロンプトの設定 
 autoload colors
