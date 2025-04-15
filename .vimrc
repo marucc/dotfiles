@@ -4,7 +4,7 @@
 " Based On:     yuroyoro https://github.com/yuroyoro/dotfiles
 " Based On:     Sotaro KARASAWA <sotaro.k@gmail.com>
 " Based On:     Daichi Kamemoto <daich@asial.co.jp>
-" Last Change:  2014/04/01
+" Last Change:  2014/04/09
 " https://github.com/marucc/dotfiles
 """""
 
@@ -37,7 +37,10 @@ endif
   " haml
   "NeoBundle 'haml.zip'
   " JavaScript
-  NeoBundle 'JavaScript-syntax'
+  "NeoBundle 'JavaScript-syntax'
+  NeoBundle 'pangloss/vim-javascript'
+  " JSX
+  NeoBundle 'mxw/vim-jsx'
   " jQuery
   NeoBundle 'jQuery'
   " nginx conf
@@ -49,7 +52,7 @@ endif
   " less
   NeoBundle 'groenewege/vim-less'
   " stylus
-  NeoBundle 'vim-scripts/vim-stylus'
+  NeoBundle 'wavded/vim-stylus'
   " python
   NeoBundle 'yuroyoro/vim-python'
   " scala
@@ -59,7 +62,7 @@ endif
   " ghc-mod
   "NeoBundle 'eagletmt/ghcmod-vim'
   " syntax checking plugins exist for eruby, haml, html, javascript, php, python, ruby and sass.
-  NeoBundle 'scrooloose/syntastic'
+  "NeoBundle 'scrooloose/syntastic'
   " yaml
   NeoBundle 'chase/vim-ansible-yaml'
 " }}}
@@ -203,7 +206,7 @@ if has("autocmd")
   autocmd FileType eruby      setlocal sw=4 sts=4 ts=4 et
   autocmd FileType html       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType java       setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType javascript setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType javascript setlocal sw=2 sts=2 ts=2 et
   autocmd FileType perl       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType php        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
@@ -321,9 +324,9 @@ if has("syntax")
 
     " diff
     highlight DiffAdd    term=bold ctermfg=White ctermbg=Red
-    highlight DiffChange term=bold ctermfg=White ctermbg=Cyan
+    highlight DiffChange term=bold ctermfg=Black ctermbg=Cyan
     highlight DiffDelete term=bold cterm=bold ctermfg=Red ctermbg=Blue
-    highlight DiffText   term=reverse cterm=bold ctermfg=Yellow ctermbg=Green
+    highlight DiffText   term=reverse cterm=bold ctermfg=Black ctermbg=Green
 endif
 "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 " Color Settings
@@ -427,6 +430,11 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
 "    hi IndentGuidesOdd  ctermbg=white
 "    hi IndentGuidesEven ctermbg=lightgrey
 "endif
+"
+"------------------------------------
+" vim-jsx
+"------------------------------------
+let g:jsx_ext_required = 0
 "
 "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 " Plugins Settings

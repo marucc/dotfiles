@@ -3,21 +3,23 @@
 #
 # Maintainer  : Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 # Based On    : Sotaro KARASAWA <sotaro.k@gmail.com>
-# Last Change : 2014/04/01
+# Last Change : 2014/04/09
 # https://github.com/marucc/dotfiles
 ####
 
 export LANG=ja_JP.UTF-8
 
 # パスの設定
-PATH=$HOME/pear/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH:/sbin:/usr/sbin
+export PATH=$HOME/pear/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:/opt/homebrew/opt/openjdk/bin:$PATH:/sbin:/usr/sbin:$HOME/Library/Android/sdk/platform-tools
 export MANPATH=/usr/local/man:/usr/share/man
+
+# homebrew
+if [ -e "/opt/homebrew/bin/brew" ] ; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
 # mysql
 export MYSQL_PS1="\u@\h[\d]> "
-
-# elixir
-export SERVER_STATUS='devlocal'
 
 # エディタを vim に設定
 export SVN_EDITOR="vim"
@@ -30,20 +32,20 @@ export LSCOLORS=ExFxCxDxBxegedabagacad
 if [ -d $HOME/.anyenv ] ; then
     export PATH="$HOME/.anyenv/bin:$PATH"
     eval "$(anyenv init -)"
+    eval "$(rbenv init -)"
+    eval "$(ndenv init -)"
  fi
 
 # python
-if [ -e /usr/local/bin/virtualenvwrapper.sh ]; then
-    if [ -e /usr/local/bin/python2.7 ]; then
-        export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python2.7
-    else
-        export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.7
-    fi
+PYENV=`which-command pyenv`
+VIRTUALENVWRAPPER=`$PYENV which virtualenvwrapper.sh || echo '/usr/local/bin/virtualenvwrapper.sh'`
+if [ -e $VIRTUALENVWRAPPER ]; then
+    export VIRTUALENVWRAPPER_PYTHON=`$PYENV which python2.7`
     export WORKON_HOME=${HOME}/venvs
     export PIP_DOWNLOAD_CACHE=${HOME}/.pip_cache
     export PIP_RESPECT_VIRTUALENV=true
     export PIP_REQUIRE_VIRTUALENV=true
-    source /usr/local/bin/virtualenvwrapper.sh
+    source $VIRTUALENVWRAPPER
 fi
 
 # zsh-notify/notify.plugin
@@ -59,12 +61,11 @@ fi
 find-grep () { find . -type f -print | xargs grep -n --binary-files=without-match $@ }
 grepv () { grep -irn --binary-files=without-match $@ * | grep -v svn }
 
-fpath=(~/.zshrc.d/completion $fpath)
-
 #Dircolorの読み込み
 ## 補完候補の色づけ
 export ZLS_COLORS=$LS_COLORS
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+fpath=(~/.zshrc.d/zsh-completions/src $fpath)
 
 # エイリアスの設定
 case "${OSTYPE}" in
@@ -89,59 +90,52 @@ alias vi='vim'
 alias v='vim'
 alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
 
-alias st='svn info; svn st'
-alias stu='svn st -u'
-alias stg='repos=`svn info|grep "URL: .*trunk"|sed "s/URL: \(.*\)trunk/\1/"`;list=`svn ls ${repos}tags`;echo -ne $list|grep "^release_"|sed "s/release_\(.*\)\//\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/release_\1/";echo -ne $list|grep -v "^release_"|sort'
-alias stl='stg'
-alias sdi='svn di'
-alias sad='svn add'
-alias smv='svn mv'
-alias srm='svn rm'
-alias sp='svn up'
-alias sup='svn up'
-alias sci='svn ci'
-
 alias gst='git status'
 alias gtg='git tag'
 alias gtl='list=`git tag`;echo -ne $list|grep "^release_"|sed "s/release_\(.*\)/\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/release_\1/";echo -ne $list|grep -v "^release_"|sort'
-alias gbl='git branch'
-alias gbls='git remote prune origin;git branch -a'
+alias gbr='git branch'
+alias gbl='git fetch --prune && git branch -vv | grep ": gone]" | awk "{print $1}" | xargs -r git branch -d 2>&1 | grep -v "not found"; git branch'
+alias gbla='gbl -a'
 alias gdi='git diff'
 alias gad='git add'
 alias gmv='git mv'
 alias grm='git rm'
 alias gci='git commit'
 alias gcia='git commit -a'
-alias gps='git push;git push --tags'
+gps() {
+    BUF=`git push 2>&1`
+    CMD=`echo "$BUF" | grep 'git push --set-upstream origin' | sed 's/ *//'`
+    if [ -n "$CMD" ]; then
+        echo -n "${CMD} [Y/n] "
+        read ANSWER
+        case `echo $ANSWER | tr y Y` in
+            "" | Y* )
+                eval "$CMD" && git push --tags
+                ;;
+        esac
+    else
+      git push --tags
+      echo "$BUF"
+    fi
+}
 alias gpl='git pull;git pull --tag'
 alias gmg='git pull origin'
 alias gco='git checkout'
-
-alias hst='echo -n "# On branch ";hg branch; hg --config "extensions.color=" status'
-alias hbl='hg --config "extensions.color=" branch'
-alias hbls='hg --config "extensions.color=" branches'
-hdi() {
-    hg --config "extensions.color=" diff --color=always $1 | less -R
-}
-alias had='hg add'
-alias hrm='hg rm'
-alias hci='hg commit'
-alias hps='hg push'
-alias hpl='hg pull;hg update'
-alias hup='hg update'
-alias hmg='hg merge -r'
-hco() {
-    hst
-    FROM=`hg branch`
-    TO=$1
-    hg pull
-    RET=`hg update -c -r $TO`
-    if [ -n "$RET" ]; then
-        hg --config "extensions.color=" update -r $TO
-        hg --config "extensions.color=" diff -r $FROM --stat
+gcor() {
+    BRANCH=`echo "$1" | grep '^remotes/origin/' | sed 's/^remotes\/origin\///'`
+    if [ -n "$BRANCH" ]; then
+        CMD="git checkout -b ${BRANCH} origin/${BRANCH}"
+        echo -n "${CMD} [Y/n] "
+        read ANSWER
+        case `echo $ANSWER | tr y Y` in
+            "" | Y* )
+                eval "$CMD"
+                ;;
+        esac
+    else
+        git checkout $1
     fi
 }
-
 
 # プロンプトの設定 
 autoload colors
@@ -165,8 +159,8 @@ case ${UID} in
 esac
 
 autoload -Uz vcs_info
-zstyle ':vcs_info:*' formats '(%s)-%b '
-zstyle ':vcs_info:*' actionformats '(%s)-%b|%a '
+zstyle ':vcs_info:*' formats '(%s) %b '
+zstyle ':vcs_info:*' actionformats '(%s) %b|%a '
 precmd () {
         psvar=()
             LANG=en_US.UTF-8 vcs_info
@@ -316,3 +310,84 @@ preexec() {
 }
 chpwd
 fi
+. "/Users/maruta/.deno/env"
+# pnpm
+export PNPM_HOME="/Users/maruta/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/maruta/lib/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/maruta/lib/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/maruta/lib/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/maruta/lib/google-cloud-sdk/completion.zsh.inc'; fi
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+# added by travis gem
+[ -f /Users/maru/.travis/travis.sh ] && source /Users/maru/.travis/travis.sh
+###-begin-nativescript-completion-###
+if complete &>/dev/null; then
+  _nativescript_completion () {
+    local si="$IFS"
+    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
+                           COMP_LINE="$COMP_LINE" \
+                           COMP_POINT="$COMP_POINT" \
+                           nativescript completion -- "${COMP_WORDS[@]}" \
+                           2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  complete -F _nativescript_completion -o default nativescript
+elif compctl &>/dev/null; then
+  _nativescript_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       nativescript completion -- "${words[@]}" \
+                       2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  compctl -K _nativescript_completion -f nativescript
+fi
+###-end-nativescript-completion-######-begin-tns-completion-###
+if complete &>/dev/null; then
+  _tns_completion () {
+    local si="$IFS"
+    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
+                           COMP_LINE="$COMP_LINE" \
+                           COMP_POINT="$COMP_POINT" \
+                           tns completion -- "${COMP_WORDS[@]}" \
+                           2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  complete -F _tns_completion -o default tns
+elif compctl &>/dev/null; then
+  _tns_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       tns completion -- "${words[@]}" \
+                       2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  compctl -K _tns_completion -f tns
+fi
+###-end-tns-completion-###

@@ -13,8 +13,14 @@ tags
 .project
 .settings
 .DS_Store
+.vscode
+*.code-workspace
 
 
 settings_*_marucc.py
 .vim/bundle/
+
+docker-compose-local.yml
+docker-compose.local.yml
+Makefile
 
