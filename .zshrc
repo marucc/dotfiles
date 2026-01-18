@@ -3,19 +3,27 @@
 #
 # Maintainer  : Tomoyuki MARUTA <tomoyuki.maruta@gmail.com>
 # Based On    : Sotaro KARASAWA <sotaro.k@gmail.com>
-# Last Change : 2014/04/09
+# Last Change : 2026/01/18
 # https://github.com/marucc/dotfiles
 ####
 
 export LANG=ja_JP.UTF-8
 
 # パスの設定
-export PATH=$HOME/pear/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:/opt/homebrew/opt/openjdk/bin:$PATH:/sbin:/usr/sbin:$HOME/Library/Android/sdk/platform-tools
+export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH:/sbin:/usr/sbin
+[ -d "$HOME/Library/Android/sdk/platform-tools" ] && export PATH="$PATH:$HOME/Library/Android/sdk/platform-tools"
 export MANPATH=/usr/local/man:/usr/share/man
 
 # homebrew
 if [ -e "/opt/homebrew/bin/brew" ] ; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# direnv
+# brew install direnv
+# 対象ディレクトリに.envrcを作成し、direnv allowで許可
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook zsh)"
 fi
 
 # mysql
@@ -33,19 +41,7 @@ if [ -d $HOME/.anyenv ] ; then
     export PATH="$HOME/.anyenv/bin:$PATH"
     eval "$(anyenv init -)"
     eval "$(rbenv init -)"
-    eval "$(ndenv init -)"
- fi
-
-# python
-PYENV=`which-command pyenv`
-VIRTUALENVWRAPPER=`$PYENV which virtualenvwrapper.sh || echo '/usr/local/bin/virtualenvwrapper.sh'`
-if [ -e $VIRTUALENVWRAPPER ]; then
-    export VIRTUALENVWRAPPER_PYTHON=`$PYENV which python2.7`
-    export WORKON_HOME=${HOME}/venvs
-    export PIP_DOWNLOAD_CACHE=${HOME}/.pip_cache
-    export PIP_RESPECT_VIRTUALENV=true
-    export PIP_REQUIRE_VIRTUALENV=true
-    source $VIRTUALENVWRAPPER
+    eval "$(nodenv init -)"
 fi
 
 # zsh-notify/notify.plugin
@@ -65,7 +61,6 @@ grepv () { grep -irn --binary-files=without-match $@ * | grep -v svn }
 ## 補完候補の色づけ
 export ZLS_COLORS=$LS_COLORS
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-fpath=(~/.zshrc.d/zsh-completions/src $fpath)
 
 # エイリアスの設定
 case "${OSTYPE}" in
@@ -90,9 +85,11 @@ alias vi='vim'
 alias v='vim'
 alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
 
+alias claude-code='NODENV_VERSION=$(nodenv versions --bare | grep "^22\." | tail -1) npx "@anthropic-ai/claude-code@latest"'
+
 alias gst='git status'
 alias gtg='git tag'
-alias gtl='list=`git tag`;echo -ne $list|grep "^release_"|sed "s/release_\(.*\)/\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/release_\1/";echo -ne $list|grep -v "^release_"|sort'
+alias gtl='list=`git tag`;echo -ne $list|grep "^v"|sed "s/v\(.*\)/\1/"|sort -t . -k 1,1 -k 2,2n -k 3,3n|sed "s/\(.*\)/v\1/";echo -ne $list|grep -v "^v"|sort'
 alias gbr='git branch'
 alias gbl='git fetch --prune && git branch -vv | grep ": gone]" | awk "{print $1}" | xargs -r git branch -d 2>&1 | grep -v "not found"; git branch'
 alias gbla='gbl -a'
@@ -102,42 +99,51 @@ alias gmv='git mv'
 alias grm='git rm'
 alias gci='git commit'
 alias gcia='git commit -a'
-gps() {
-    BUF=`git push 2>&1`
-    CMD=`echo "$BUF" | grep 'git push --set-upstream origin' | sed 's/ *//'`
-    if [ -n "$CMD" ]; then
-        echo -n "${CMD} [Y/n] "
-        read ANSWER
-        case `echo $ANSWER | tr y Y` in
-            "" | Y* )
-                eval "$CMD" && git push --tags
-                ;;
-        esac
-    else
-      git push --tags
-      echo "$BUF"
-    fi
-}
+#gps() {
+#    BUF=`git push 2>&1`
+#    CMD=`echo "$BUF" | grep 'git push --set-upstream origin' | sed 's/ *//'`
+#    if [ -n "$CMD" ]; then
+#        echo -n "${CMD} [Y/n] "
+#        read ANSWER
+#        case `echo $ANSWER | tr y Y` in
+#            "" | Y* )
+#                eval "$CMD" && git push --tags
+#                ;;
+#        esac
+#    else
+#      git push --tags
+#      echo "$BUF"
+#    fi
+#}
+alias gps='git push;git push --tags'
+alias gpsf='git push --force-with-lease;git push --tags'
 alias gpl='git pull;git pull --tag'
 alias gmg='git pull origin'
+#alias gco='git checkout'
+#gcor() {
+#    BRANCH=`echo "$1" | grep '^remotes/origin/' | sed 's/^remotes\/origin\///'`
+#    if [ -n "$BRANCH" ]; then
+#        CMD="git checkout -b ${BRANCH} origin/${BRANCH}"
+#        echo -n "${CMD} [Y/n] "
+#        read ANSWER
+#        case `echo $ANSWER | tr y Y` in
+#            "" | Y* )
+#                eval "$CMD"
+#                ;;
+#        esac
+#    else
+#        git checkout $1
+#    fi
+#}
 alias gco='git checkout'
-gcor() {
-    BRANCH=`echo "$1" | grep '^remotes/origin/' | sed 's/^remotes\/origin\///'`
-    if [ -n "$BRANCH" ]; then
-        CMD="git checkout -b ${BRANCH} origin/${BRANCH}"
-        echo -n "${CMD} [Y/n] "
-        read ANSWER
-        case `echo $ANSWER | tr y Y` in
-            "" | Y* )
-                eval "$CMD"
-                ;;
-        esac
-    else
-        git checkout $1
-    fi
-}
+alias gsw='git switch'
+# _complete_gsw(){
+#   opts=`git branch | grep -v '*' | xargs -n1 echo | tr '\n' ' '`
+#   COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+# }
+# complete -F _complete_gsw gsw
 
-# プロンプトの設定 
+# プロンプトの設定
 autoload colors
 #colors
 
@@ -146,14 +152,14 @@ case ${UID} in
     PROMPT="%B%{[31m%}%n@%m#%{[m%}%b "
     PROMPT2="%B%{[31m%}%_#%{[m%}%b "
     SPROMPT="%B%{[31m%}%r is correct? [n,y,a,e]:%[m%}%b "
-    #[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+    #[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
         #PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
 ;;
 *)
     PROMPT="%{[36m%}%n%%%{[m%} "
     PROMPT2="%{[35m%}%_%%%{[m%} "
     SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
-    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
         PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
 ;;
 esac
@@ -190,6 +196,11 @@ setopt extended_history
 
 # 補完するかの質問は画面を超える時にのみに行う｡
 LISTMAX=0
+
+# zsh-completions (brew install zsh-completions)
+if type brew &>/dev/null && [ -d "$(brew --prefix)/share/zsh-completions" ]; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+fi
 
 # 補完の利用設定
 autoload -Uz compinit; compinit -u
@@ -288,7 +299,7 @@ preexec() {
             cmd=(builtin jobs -l $cmd[2])
                 fi
                 ;;
-    %*) 
+    %*)
         cmd=(builtin jobs -l $cmd[1])
         ;;
     cd)
@@ -310,9 +321,11 @@ preexec() {
 }
 chpwd
 fi
-. "/Users/maruta/.deno/env"
+
+#. "$HOME/.deno/env"
+
 # pnpm
-export PNPM_HOME="/Users/maruta/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -320,74 +333,13 @@ esac
 # pnpm end
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/maruta/lib/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/maruta/lib/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOME/lib/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/lib/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/maruta/lib/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/maruta/lib/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/lib/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/lib/google-cloud-sdk/completion.zsh.inc"; fi
 
 ### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
+[ -d /usr/local/heroku/bin ] && export PATH="/usr/local/heroku/bin:$PATH"
 
 # added by travis gem
-[ -f /Users/maru/.travis/travis.sh ] && source /Users/maru/.travis/travis.sh
-###-begin-nativescript-completion-###
-if complete &>/dev/null; then
-  _nativescript_completion () {
-    local si="$IFS"
-    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
-                           COMP_LINE="$COMP_LINE" \
-                           COMP_POINT="$COMP_POINT" \
-                           nativescript completion -- "${COMP_WORDS[@]}" \
-                           2>/dev/null)) || return $?
-    IFS="$si"
-  }
-  complete -F _nativescript_completion -o default nativescript
-elif compctl &>/dev/null; then
-  _nativescript_completion () {
-    local cword line point words si
-    read -Ac words
-    read -cn cword
-    let cword-=1
-    read -l line
-    read -ln point
-    si="$IFS"
-    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
-                       COMP_LINE="$line" \
-                       COMP_POINT="$point" \
-                       nativescript completion -- "${words[@]}" \
-                       2>/dev/null)) || return $?
-    IFS="$si"
-  }
-  compctl -K _nativescript_completion -f nativescript
-fi
-###-end-nativescript-completion-######-begin-tns-completion-###
-if complete &>/dev/null; then
-  _tns_completion () {
-    local si="$IFS"
-    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
-                           COMP_LINE="$COMP_LINE" \
-                           COMP_POINT="$COMP_POINT" \
-                           tns completion -- "${COMP_WORDS[@]}" \
-                           2>/dev/null)) || return $?
-    IFS="$si"
-  }
-  complete -F _tns_completion -o default tns
-elif compctl &>/dev/null; then
-  _tns_completion () {
-    local cword line point words si
-    read -Ac words
-    read -cn cword
-    let cword-=1
-    read -l line
-    read -ln point
-    si="$IFS"
-    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
-                       COMP_LINE="$line" \
-                       COMP_POINT="$point" \
-                       tns completion -- "${words[@]}" \
-                       2>/dev/null)) || return $?
-    IFS="$si"
-  }
-  compctl -K _tns_completion -f tns
-fi
-###-end-tns-completion-###
+[ -f "$HOME/.travis/travis.sh" ] && source "$HOME/.travis/travis.sh"
