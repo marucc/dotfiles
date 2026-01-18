@@ -9,7 +9,7 @@
 .#*
 .DS_Store
 *.sw[po]
-tags
+*-e
 .project
 .settings
 .DS_Store
@@ -22,5 +22,12 @@ settings_*_marucc.py
 
 docker-compose-local.yml
 docker-compose.local.yml
+compose-local.yaml
+compose.local.yaml
 Makefile
+CLAUDE.md
+
+
+**/.claude/settings.local.json
+config/initializers/*.local.rb
 
