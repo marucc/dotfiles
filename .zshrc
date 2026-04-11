@@ -72,10 +72,10 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 # エイリアスの設定
 if command -v eza &> /dev/null; then
-    alias ls='eza --icons'
-    alias ll='eza -l --icons'
-    alias la='eza -la --icons'
-    alias tree='eza --tree --icons'
+    ls() { command eza --icons "$@" }
+    ll() { command eza -l --icons "$@" }
+    la() { command eza -la --icons "$@" }
+    tree() { command eza --tree --icons "$@" }
 else
     case "${OSTYPE}" in
     darwin*)
@@ -175,6 +175,11 @@ fi
 
 # 補完の利用設定
 autoload -Uz compinit; compinit -u
+
+# eza 関数の補完
+if command -v eza &> /dev/null; then
+    compdef _files ls ll la tree
+fi
 
 # sudo でも補完の対象
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin
