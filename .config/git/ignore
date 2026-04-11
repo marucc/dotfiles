@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+
+# エディタ
+.*~
+*~
+.#*
+*.sw[po]
+*-e
+#*#
+.*.rej
+*.rej
+.project
+.settings
+.vscode
+*.code-workspace
+
+# Docker ローカル設定
+docker-compose-local.yml
+docker-compose.local.yml
+compose-local.yaml
+compose.local.yaml
+
+# プロジェクトローカル
+Makefile
+CLAUDE.md
+**/.claude/settings.local.json
+config/initializers/*.local.rb

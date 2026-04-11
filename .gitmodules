@@ -1,9 +1,3 @@
-[submodule ".vim/bundle/neobundle.vim"]
-	path = .vim/bundle/neobundle.vim
-	url = https://github.com/Shougo/neobundle.vim.git
-[submodule ".zshrc.d/zsh-notify"]
-	path = .zshrc.d/zsh-notify
-	url = git@github.com:marzocchi/zsh-notify.git
-[submodule ".zshrc.d/zsh-completions"]
-	path = .zshrc.d/zsh-completions
-	url = git@github.com:zsh-users/zsh-completions.git
+[submodule ".zshrc.d/zsh-auto-notify"]
+	path = .zshrc.d/zsh-auto-notify
+	url = https://github.com/MichaelAquilina/zsh-auto-notify.git

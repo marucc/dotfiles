@@ -30,27 +30,20 @@ fi
 export MYSQL_PS1="\u@\h[\d]> "
 
 # エディタを vim に設定
-export SVN_EDITOR="vim"
 export EDITOR="vim"
 export CLICOLOR=1
-export SCREENDIR=$HOME/.screen
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
-# anyenv
-if [ -d $HOME/.anyenv ] ; then
-    export PATH="$HOME/.anyenv/bin:$PATH"
-    eval "$(anyenv init -)"
-    eval "$(rbenv init -)"
-    eval "$(nodenv init -)"
+# mise
+if command -v mise &> /dev/null; then
+    eval "$(mise activate zsh)"
 fi
 
-# zsh-notify/notify.plugin
-if [ -e /usr/local/bin/terminal-notifier ]; then
-    export SYS_NOTIFIER="/usr/local/bin/terminal-notifier"
-    if [ -e ~/.zshrc.d/zsh-notify/notify.plugin.zsh ]; then
-        autoload add-zsh-hook
-        source ~/.zshrc.d/zsh-notify/notify.plugin.zsh
-    fi
+# zsh-auto-notify
+if [ -e ~/.zshrc.d/zsh-auto-notify/auto-notify.plugin.zsh ]; then
+    source ~/.zshrc.d/zsh-auto-notify/auto-notify.plugin.zsh
+    AUTO_NOTIFY_THRESHOLD=30
+    AUTO_NOTIFY_IGNORE=("vim" "vi" "ssh" "tmux" "man" "less" "more" "claude")
 fi
 
 # 関数
@@ -73,11 +66,6 @@ linux*)
     ;;
 esac
 
-if [ -e /Applications/MacVim.app/Contents/MacOS/Vim ]; then
-    export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
-    alias vim='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@"'
-fi
-
 alias ll='ls -l'
 alias la='ls -la'
 alias dh='df -h'
@@ -85,7 +73,7 @@ alias vi='vim'
 alias v='vim'
 alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
 
-alias claude-code='NODENV_VERSION=$(nodenv versions --bare | grep "^22\." | tail -1) npx "@anthropic-ai/claude-code@latest"'
+alias claude-code='mise x node@22 -- npx "@anthropic-ai/claude-code@latest"'
 
 alias gst='git status'
 alias gtg='git tag'
@@ -99,49 +87,12 @@ alias gmv='git mv'
 alias grm='git rm'
 alias gci='git commit'
 alias gcia='git commit -a'
-#gps() {
-#    BUF=`git push 2>&1`
-#    CMD=`echo "$BUF" | grep 'git push --set-upstream origin' | sed 's/ *//'`
-#    if [ -n "$CMD" ]; then
-#        echo -n "${CMD} [Y/n] "
-#        read ANSWER
-#        case `echo $ANSWER | tr y Y` in
-#            "" | Y* )
-#                eval "$CMD" && git push --tags
-#                ;;
-#        esac
-#    else
-#      git push --tags
-#      echo "$BUF"
-#    fi
-#}
 alias gps='git push;git push --tags'
 alias gpsf='git push --force-with-lease;git push --tags'
 alias gpl='git pull;git pull --tag'
 alias gmg='git pull origin'
-#alias gco='git checkout'
-#gcor() {
-#    BRANCH=`echo "$1" | grep '^remotes/origin/' | sed 's/^remotes\/origin\///'`
-#    if [ -n "$BRANCH" ]; then
-#        CMD="git checkout -b ${BRANCH} origin/${BRANCH}"
-#        echo -n "${CMD} [Y/n] "
-#        read ANSWER
-#        case `echo $ANSWER | tr y Y` in
-#            "" | Y* )
-#                eval "$CMD"
-#                ;;
-#        esac
-#    else
-#        git checkout $1
-#    fi
-#}
 alias gco='git checkout'
 alias gsw='git switch'
-# _complete_gsw(){
-#   opts=`git branch | grep -v '*' | xargs -n1 echo | tr '\n' ' '`
-#   COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-# }
-# complete -F _complete_gsw gsw
 
 # プロンプトの設定
 autoload colors
@@ -275,54 +226,9 @@ unsetopt promptcr
 unsetopt hup
 setopt nocheckjobs
 
-# Emasc 風キーバインド
+# Emacs 風キーバインド
 bindkey -e
 
-# screen のステータスバーに現在実行中のコマンドを表示
-# cd をしたときにlsを実行する
-# ref. http://nijino.homelinux.net/diary/200206.shtml#200206140
-if [ "$TERM" = "screen" ]; then
-chpwd () {
-    echo -n "_`dirs`\\"
-    ls
-}
-preexec() {
-# see [zsh-workers:13180]
-# http://www.zsh.org/mla/workers/2000/msg03993.html
-    emulate -L zsh
-        local -a cmd; cmd=(${(z)2})
-        case $cmd[1] in
-        fg)
-        if (( $#cmd == 1 )); then
-            cmd=(builtin jobs -l %+)
-        else
-            cmd=(builtin jobs -l $cmd[2])
-                fi
-                ;;
-    %*)
-        cmd=(builtin jobs -l $cmd[1])
-        ;;
-    cd)
-        if (( $#cmd == 2)); then
-            cmd[1]=$cmd[2]
-                fi
-                ;&
-                *)
-                echo -n "k$cmd[1]:t\\"
-                return
-                ;;
-    esac
-
-        local -A jt; jt=(${(kv)jobtexts})
-
-        $cmd >>(read num rest
-                cmd=(${(z)${(e):-\$jt$num}})
-                echo -n "k$cmd[1]:t\\") 2>/dev/null
-}
-chpwd
-fi
-
-#. "$HOME/.deno/env"
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
@@ -338,8 +244,3 @@ if [ -f "$HOME/lib/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/lib/google-cl
 # The next line enables shell command completion for gcloud.
 if [ -f "$HOME/lib/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/lib/google-cloud-sdk/completion.zsh.inc"; fi
 
-### Added by the Heroku Toolbelt
-[ -d /usr/local/heroku/bin ] && export PATH="/usr/local/heroku/bin:$PATH"
-
-# added by travis gem
-[ -f "$HOME/.travis/travis.sh" ] && source "$HOME/.travis/travis.sh"
