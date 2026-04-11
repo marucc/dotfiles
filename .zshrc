@@ -34,9 +34,24 @@ export EDITOR="vim"
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
+# colima（Docker Desktop が無い場合）
+if command -v colima &> /dev/null && [ ! -e /Applications/Docker.app ]; then
+    export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+fi
+
 # mise
 if command -v mise &> /dev/null; then
     eval "$(mise activate zsh)"
+fi
+
+# fzf
+if command -v fzf &> /dev/null; then
+    eval "$(fzf --zsh)"
+fi
+
+# zoxide
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh)"
 fi
 
 # zsh-auto-notify
@@ -56,18 +71,23 @@ export ZLS_COLORS=$LS_COLORS
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 # エイリアスの設定
-case "${OSTYPE}" in
-darwin*)
-    alias ls='ls -G'
-    ;;
-linux*)
-    # eval `dircolors -b ~/.dircolors`
-    alias ls='ls --color=auto'
-    ;;
-esac
-
-alias ll='ls -l'
-alias la='ls -la'
+if command -v eza &> /dev/null; then
+    alias ls='eza --icons'
+    alias ll='eza -l --icons'
+    alias la='eza -la --icons'
+    alias tree='eza --tree --icons'
+else
+    case "${OSTYPE}" in
+    darwin*)
+        alias ls='ls -G'
+        ;;
+    linux*)
+        alias ls='ls --color=auto'
+        ;;
+    esac
+    alias ll='ls -l'
+    alias la='ls -la'
+fi
 alias dh='df -h'
 alias vi='vim'
 alias v='vim'
