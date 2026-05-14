@@ -44,9 +44,39 @@ if command -v mise &> /dev/null; then
     eval "$(mise activate zsh)"
 fi
 
+# Emacs 風キーバインド（個別 bindkey より前に置く）
+bindkey -e
+
 # fzf
 if command -v fzf &> /dev/null; then
     eval "$(fzf --zsh)"
+
+    # Ctrl+r で履歴に候補がない場合や Esc キャンセル時に、入力文字列をコマンドラインに残す
+    fzf-history-widget-with-fallback() {
+        local original="$LBUFFER" result
+        result=$(fc -rl 1 | awk '{$1=""; sub(/^ /, ""); print}' | \
+            fzf --query="$LBUFFER" --no-sort --print-query --expect=esc +m)
+        # 1行目: クエリ, 2行目: 押されたキー (Enter=空, Esc="esc"), 3行目以降: 選択項目
+        local lines=("${(@f)result}")
+        local query="${lines[1]}"
+        local key="${lines[2]}"
+        local selected="${lines[3]}"
+        if [[ "$key" == "esc" ]]; then
+            # Esc: クエリのみ使う (選択項目は捨てる)
+            LBUFFER="${query:-$original}"
+        elif [[ -n "$selected" ]]; then
+            # Enter + 選択項目あり
+            LBUFFER="$selected"
+        elif [[ -n "$query" ]]; then
+            # Enter + 候補なし: クエリを使う
+            LBUFFER="$query"
+        else
+            LBUFFER="$original"
+        fi
+        zle redisplay
+    }
+    zle -N fzf-history-widget-with-fallback
+    bindkey '^R' fzf-history-widget-with-fallback
 fi
 
 # zoxide
@@ -250,10 +280,6 @@ unsetopt promptcr
 # ジョブ
 unsetopt hup
 setopt nocheckjobs
-
-# Emacs 風キーバインド
-bindkey -e
-
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
