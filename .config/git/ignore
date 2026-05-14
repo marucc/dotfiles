@@ -22,6 +22,9 @@
 # プロジェクトローカル
 Makefile
 CLAUDE.md
+mise.toml
+.claude/
+.shogun/
 
 # node
 .pnpm-store
