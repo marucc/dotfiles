@@ -142,7 +142,7 @@ alias gpsf='git push --force-with-lease;git push --tags'
 alias gpl='git pull;git pull --tag'
 alias gmg='git pull origin'
 alias gco='git checkout'
-alias gsw='git switch'
+alias gsw='git fetch && git switch'
 
 # プロンプトの設定
 autoload colors
