@@ -6,7 +6,7 @@ for dotfile in .?*
 do
     if [ $dotfile != '..' ] && [ $dotfile != '.git' ] && [ $dotfile != '.gitmodules' ] && [ $dotfile != '.config' ]
     then
-        ln -Fis "$PWD/$dotfile" $HOME
+        ln -sfn "$PWD/$dotfile" "$HOME/$dotfile"
     fi
 done
 
@@ -15,7 +15,7 @@ if [ -d .config ]; then
     for dir in .config/*/; do
         mkdir -p "$HOME/$dir"
         for file in "$dir"*; do
-            ln -Fis "$PWD/$file" "$HOME/$file"
+            ln -sfn "$PWD/$file" "$HOME/$file"
         done
     done
 fi
