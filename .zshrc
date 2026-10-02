@@ -102,10 +102,10 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 # エイリアスの設定
 if command -v eza &> /dev/null; then
-    ls() { command eza --icons "$@" }
-    ll() { command eza -l --icons "$@" }
-    la() { command eza -la --icons "$@" }
-    tree() { command eza --tree --icons "$@" }
+    ls() { command eza --icons=auto "$@" }
+    ll() { command eza -l --icons=auto "$@" }
+    la() { command eza -la --icons=auto "$@" }
+    tree() { command eza --tree --icons=auto "$@" }
 else
     case "${OSTYPE}" in
     darwin*)
