@@ -25,6 +25,7 @@ CLAUDE.md
 mise.toml
 .claude/
 .shogun/
+*.local
 
 # node
 .pnpm-store

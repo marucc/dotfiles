@@ -88,7 +88,7 @@ fi
 if [ -e ~/.zshrc.d/zsh-auto-notify/auto-notify.plugin.zsh ]; then
     source ~/.zshrc.d/zsh-auto-notify/auto-notify.plugin.zsh
     AUTO_NOTIFY_THRESHOLD=30
-    AUTO_NOTIFY_IGNORE=("vim" "vi" "ssh" "tmux" "man" "less" "more" "claude")
+    AUTO_NOTIFY_IGNORE=("vim" "vi" "ssh" "tmux" "man" "less" "more" "claude" "claude-code")
 fi
 
 # 関数
@@ -123,7 +123,7 @@ alias vi='vim'
 alias v='vim'
 alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
 
-alias claude-code='mise x node@22 -- npx "@anthropic-ai/claude-code@latest"'
+alias claude='mise x node@22 -- npx --yes "@anthropic-ai/claude-code@latest"'
 
 alias gst='git status'
 alias gtg='git tag'
