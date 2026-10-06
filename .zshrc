@@ -10,7 +10,7 @@
 export LANG=ja_JP.UTF-8
 
 # パスの設定
-export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH:/sbin:/usr/sbin
+export PATH=$HOME/.local/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH:/sbin:/usr/sbin
 [ -d "$HOME/Library/Android/sdk/platform-tools" ] && export PATH="$PATH:$HOME/Library/Android/sdk/platform-tools"
 export MANPATH=/usr/local/man:/usr/share/man
 
@@ -95,6 +95,21 @@ fi
 find-grep () { find . -type f -print | xargs grep -n --binary-files=without-match $@ }
 grepv () { grep -irn --binary-files=without-match $@ * | grep -v svn }
 
+# Claude handoff/ログファイルをリアルタイム監視（右ペイン用）
+# 使い方: wf [ファイルパス]  省略時は .claude/handoff/ 以下の最新ファイルを自動選択
+wf () {
+    local file="${1:-}"
+    if [[ -z "$file" ]]; then
+        file=$(ls -t .claude/handoff/*.md 2>/dev/null | head -1)
+        if [[ -z "$file" ]]; then
+            echo "監視対象ファイルが見つかりません。パスを指定してください: wf <file>"
+            return 1
+        fi
+        echo "監視: $file"
+    fi
+    echo "$file" | entr -c glow -w 120 "$file"
+}
+
 #Dircolorの読み込み
 ## 補完候補の色づけ
 export ZLS_COLORS=$LS_COLORS
@@ -123,7 +138,6 @@ alias vi='vim'
 alias v='vim'
 alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
 
-alias claude='mise x node@22 -- npx --yes "@anthropic-ai/claude-code@latest"'
 
 alias gst='git status'
 alias gtg='git tag'
