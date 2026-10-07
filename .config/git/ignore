@@ -14,6 +14,7 @@
 .settings
 .vscode
 *.code-workspace
+.worktreeinclude
 
 # Docker ローカル設定
 *.local.*
@@ -29,4 +30,7 @@ mise.toml
 
 # node
 .pnpm-store
+node_modules
 
+# backup
+.backupconfig
