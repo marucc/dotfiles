@@ -309,3 +309,6 @@ if [ -f "$HOME/lib/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/lib/google-cl
 # The next line enables shell command completion for gcloud.
 if [ -f "$HOME/lib/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/lib/google-cloud-sdk/completion.zsh.inc"; fi
 
+# cmuxのclaude wrapperが参照するclaude実体パス
+export CMUX_CUSTOM_CLAUDE_PATH="$HOME/.local/bin/claude"
+
