@@ -1,0 +1,3 @@
+# vim-plug がインストールするプラグイン（再インストール可能）
+.vim/autoload/
+.vim/plugged/

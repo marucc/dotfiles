@@ -4,7 +4,7 @@ cd $(dirname $0)
 # ホーム直下のdotfileをシンボリックリンク
 for dotfile in .?*
 do
-    if [ $dotfile != '..' ] && [ $dotfile != '.git' ] && [ $dotfile != '.gitmodules' ] && [ $dotfile != '.config' ]
+    if [ $dotfile != '..' ] && [ $dotfile != '.git' ] && [ $dotfile != '.gitignore' ] && [ $dotfile != '.gitmodules' ] && [ $dotfile != '.config' ]
     then
         ln -sfn "$PWD/$dotfile" "$HOME/$dotfile"
     fi
