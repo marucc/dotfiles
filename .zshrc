@@ -44,6 +44,21 @@ if command -v mise &> /dev/null; then
     eval "$(mise activate zsh)"
 fi
 
+if [[ -d "$HOME/dev/marucc/mac_setup" ]]; then
+  # cmux の Claude Code 統合: pty-wrapper 経由で起動するシムを参照
+  export CMUX_CUSTOM_CLAUDE_PATH="$HOME/dev/marucc/mac_setup/claude/pty-wrapper/shim.sh"
+
+  # claude コマンドを pty-wrapper 経由で起動する
+  # CLAUDE_PTY_WRAPPED が設定済みの場合（wrapper 内部からの呼び出し）は素通し
+  claude() {
+    if [[ -n "$CLAUDE_PTY_WRAPPED" ]]; then
+      command claude "$@"
+    else
+      exec node "$HOME/dev/marucc/mac_setup/claude/pty-wrapper/wrapper.js" "$@"
+    fi
+  }
+fi
+
 # Emacs 風キーバインド（個別 bindkey より前に置く）
 bindkey -e
 
@@ -308,7 +323,3 @@ if [ -f "$HOME/lib/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/lib/google-cl
 
 # The next line enables shell command completion for gcloud.
 if [ -f "$HOME/lib/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/lib/google-cloud-sdk/completion.zsh.inc"; fi
-
-# cmuxのclaude wrapperが参照するclaude実体パス
-export CMUX_CUSTOM_CLAUDE_PATH="$HOME/.local/bin/claude"
-
