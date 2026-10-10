@@ -57,6 +57,33 @@ if [[ -d "$HOME/dev/marucc/mac_setup" ]]; then
       exec node "$HOME/dev/marucc/mac_setup/claude/pty-wrapper/wrapper.js" "$@"
     fi
   }
+
+  # cmux 再起動後の自動コマンド実行
+  # $CMUX_SURFACE_ID に対応するコマンドが saved されていれば起動する
+  # /tmp フラグで「再起動後1回だけ」を保証（/tmp は再起動でクリアされる）
+  _cmux_autostart() {
+    [[ -z "$CMUX_SURFACE_ID" ]] && return
+    local map="$HOME/.config/cmux/surface-commands.json"
+    local log="/tmp/cmux-autostart.log"
+    local ts; ts=$(date '+%Y-%m-%dT%H:%M:%S')
+    [[ -f "$map" ]] || { echo "$ts SKIP no map file" >> "$log"; return; }
+    local flag="/tmp/cmux-autostart-${CMUX_SURFACE_ID}"
+    [[ -f "$flag" ]] && { echo "$ts SKIP already ran $CMUX_SURFACE_ID" >> "$log"; return; }
+    local cmd
+    cmd=$(python3 -c "
+import json, sys
+with open('$map') as f:
+    m = json.load(f)
+print(m.get('$CMUX_SURFACE_ID', {}).get('command', ''))
+" 2>/dev/null)
+    if [[ -z "$cmd" ]]; then
+      echo "$ts MISS $CMUX_SURFACE_ID (no match)" >> "$log"
+      return
+    fi
+    echo "$ts RUN  $CMUX_SURFACE_ID → $cmd" >> "$log"
+    touch "$flag"
+    eval "$cmd"
+  }
 fi
 
 # Emacs 風キーバインド（個別 bindkey より前に置く）
@@ -323,3 +350,6 @@ if [ -f "$HOME/lib/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/lib/google-cl
 
 # The next line enables shell command completion for gcloud.
 if [ -f "$HOME/lib/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/lib/google-cloud-sdk/completion.zsh.inc"; fi
+
+# cmux 再起動後の自動コマンド実行（wf 等の関数定義後に呼ぶ必要があるため末尾に置く）
+[[ $(type -w _cmux_autostart) == *function* ]] && _cmux_autostart
