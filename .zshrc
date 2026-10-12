@@ -50,6 +50,8 @@ if [[ -d "$HOME/dev/marucc/mac_setup" ]]; then
     export CMUX_CUSTOM_CLAUDE_PATH="$HOME/dev/marucc/claude-pty-notify/shim.sh"
     # 未確認マークを Nerd Font のベル（nf-md-bell）にする。グリフが幅を超えて描かれるので後ろに空白を足す
     export CLAUDE_PTY_UNREAD_MARKER=$'\U000F009A '
+    # cmux 以外（VS Code 等）でも claude-pty-notify を経由する
+    claude() { "$HOME/dev/marucc/claude-pty-notify/shim.sh" "$@"; }
   fi
 
   # cmux 再起動後の自動コマンド実行
