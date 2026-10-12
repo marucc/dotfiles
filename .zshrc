@@ -48,8 +48,6 @@ if [[ -d "$HOME/dev/marucc/mac_setup" ]]; then
   # cmux の Claude Code 統合: claude-pty-notify 経由で起動するシムを参照
   if [[ -x "$HOME/dev/marucc/claude-pty-notify/shim.sh" ]]; then
     export CMUX_CUSTOM_CLAUDE_PATH="$HOME/dev/marucc/claude-pty-notify/shim.sh"
-    # 未確認マークを Nerd Font のベル（nf-md-bell）にする。グリフが幅を超えて描かれるので後ろに空白を足す
-    export CLAUDE_PTY_UNREAD_MARKER=$'\U000F009A '
     # cmux 以外（VS Code 等）でも claude-pty-notify を経由する
     claude() { "$HOME/dev/marucc/claude-pty-notify/shim.sh" "$@"; }
   fi
