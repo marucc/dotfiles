@@ -64,6 +64,10 @@ if [[ -d "$HOME/dev/marucc/mac_setup" ]]; then
     local ts; ts=$(date '+%Y-%m-%dT%H:%M:%S')
     [[ -f "$map" ]] || { echo "$ts SKIP no map file" >> "$log"; return; }
     local flag="/tmp/cmux-autostart-${CMUX_SURFACE_ID}"
+    # surface-commands.json より古いフラグは cmux-save 前の残骸なので削除して再実行させる
+    if [[ -f "$flag" ]] && [[ "$flag" -ot "$map" ]]; then
+      unlink "$flag"
+    fi
     [[ -f "$flag" ]] && { echo "$ts SKIP already ran $CMUX_SURFACE_ID" >> "$log"; return; }
     local cmd
     cmd=$(python3 -c "
