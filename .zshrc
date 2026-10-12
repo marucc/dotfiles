@@ -45,18 +45,12 @@ if command -v mise &> /dev/null; then
 fi
 
 if [[ -d "$HOME/dev/marucc/mac_setup" ]]; then
-  # cmux の Claude Code 統合: pty-wrapper 経由で起動するシムを参照
-  export CMUX_CUSTOM_CLAUDE_PATH="$HOME/dev/marucc/mac_setup/claude/pty-wrapper/shim.sh"
-
-  # claude コマンドを pty-wrapper 経由で起動する
-  # CLAUDE_PTY_WRAPPED が設定済みの場合（wrapper 内部からの呼び出し）は素通し
-  claude() {
-    if [[ -n "$CLAUDE_PTY_WRAPPED" ]]; then
-      command claude "$@"
-    else
-      exec node "$HOME/dev/marucc/mac_setup/claude/pty-wrapper/wrapper.js" "$@"
-    fi
-  }
+  # cmux の Claude Code 統合: claude-pty-notify 経由で起動するシムを参照
+  if [[ -x "$HOME/dev/marucc/claude-pty-notify/shim.sh" ]]; then
+    export CMUX_CUSTOM_CLAUDE_PATH="$HOME/dev/marucc/claude-pty-notify/shim.sh"
+    # 未確認マークを Nerd Font のベル（nf-md-bell）にする。グリフが幅を超えて描かれるので後ろに空白を足す
+    export CLAUDE_PTY_UNREAD_MARKER=$'\U000F009A '
+  fi
 
   # cmux 再起動後の自動コマンド実行
   # $CMUX_SURFACE_ID に対応するコマンドが saved されていれば起動する
