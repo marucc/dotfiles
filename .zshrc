@@ -94,8 +94,8 @@ if command -v fzf &> /dev/null; then
     # Ctrl+r で履歴に候補がない場合や Esc キャンセル時に、入力文字列をコマンドラインに残す
     fzf-history-widget-with-fallback() {
         local original="$LBUFFER" result
-        result=$(fc -rl 1 | awk '{$1=""; sub(/^ /, ""); print}' | \
-            fzf --query="$LBUFFER" --no-sort --print-query --expect=esc +m)
+        result=$(fc -rl 1 | awk '{$1=""; sub(/^ /, ""); print}' | awk '!seen[$0]++' | \
+            fzf --query="$LBUFFER" --scheme=history --print-query --expect=esc +m)
         # 1行目: クエリ, 2行目: 押されたキー (Enter=空, Esc="esc"), 3行目以降: 選択項目
         local lines=("${(@f)result}")
         local query="${lines[1]}"
