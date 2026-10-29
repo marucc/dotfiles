@@ -124,13 +124,6 @@ if command -v zoxide &> /dev/null; then
     eval "$(zoxide init zsh)"
 fi
 
-# zsh-auto-notify
-if [ -e ~/.zshrc.d/zsh-auto-notify/auto-notify.plugin.zsh ]; then
-    source ~/.zshrc.d/zsh-auto-notify/auto-notify.plugin.zsh
-    AUTO_NOTIFY_THRESHOLD=30
-    AUTO_NOTIFY_IGNORE=("vim" "vi" "ssh" "tmux" "man" "less" "more" "claude" "claude-code")
-fi
-
 # 関数
 find-grep () { find . -type f -print | xargs grep -n --binary-files=without-match $@ }
 grepv () { grep -irn --binary-files=without-match $@ * | grep -v svn }
