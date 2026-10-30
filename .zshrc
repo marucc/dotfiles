@@ -342,5 +342,11 @@ if [ -f "$HOME/lib/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/lib/google-cl
 # The next line enables shell command completion for gcloud.
 if [ -f "$HOME/lib/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/lib/google-cloud-sdk/completion.zsh.inc"; fi
 
-# cmux 再起動後の自動コマンド実行（wf 等の関数定義後に呼ぶ必要があるため末尾に置く）
-[[ $(type -w _cmux_autostart) == *function* ]] && _cmux_autostart
+# cmux 再起動後の自動コマンド実行（最初のプロンプト表示直前に実行して TTY を確立させる）
+if [[ $(type -w _cmux_autostart) == *function* ]]; then
+  _cmux_autostart_once() {
+    add-zsh-hook -d precmd _cmux_autostart_once
+    _cmux_autostart
+  }
+  add-zsh-hook precmd _cmux_autostart_once
+fi
